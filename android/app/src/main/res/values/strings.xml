@@ -607,7 +607,7 @@
     <string name="l10n_health_screen_no_strap_connected_fb37b99e">No strap connected</string>
     <string name="l10n_health_screen_not_enough_history_in_this_range_2da72f80">Not enough history in this range</string>
     <string name="l10n_health_screen_not_enough_history_yet_0e2f93b6">Not enough history yet</string>
-    <string name="l10n_health_screen_one_reading_so_far_your_trend_eaad57f2">One reading so far — your trend chart fills in here once a second </string>
+    <string name="l10n_health_screen_one_reading_so_far_your_trend_eaad57f2">One reading so far — your trend chart fills in here once a second until a reading lands.</string>
     <string name="l10n_health_screen_out_of_100_da0953a8">out of 100</string>
     <string name="l10n_health_screen_respiratory_1cd8c175">Respiratory</string>
     <string name="l10n_health_screen_resting_hr_26677094">Resting HR</string>
@@ -2775,4 +2775,10 @@
     <string name="l10n_today_screen_see_the_charge_trend_9dcbcff7">See the Charge trend</string>
     <string name="l10n_today_screen_every_day_s_score_over_time_a00ea7c7">Every day\'s score, over time.</string>
     <string name="l10n_app_changelog_a_coach_that_keeps_the_thread_2ee52e0c">A coach that keeps the thread, your heart rate on the home screen, and charts that claim less</string>
+    <string name="l10n_data_sources_screen_not_yet">not yet</string>
+    <string name="l10n_test_centre_screen_share_captured_log">Share captured log</string>
+    <string name="l10n_trends_screen_share_recap">Share recap</string>
+    <string name="l10n_settings_screen_browse_files">Browse files</string>
+    <string name="l10n_settings_screen_remove_image">Remove image</string>
+    <string name="l10n_sleep_screen_raw_on_device_stages">Raw on-device stages</string>
 </resources>

@@ -1869,7 +1869,7 @@ fun SettingsScreen(
                     },
                 )
                 NoopButton(
-                    text = "Browse files",
+                    text = uiString(R.string.l10n_settings_screen_browse_files),
                     kind = NoopButtonKind.Secondary,
                     modifier = Modifier.weight(1f),
                     onClick = { backgroundFileLauncher.launch(arrayOf("image/*")) },
@@ -1928,7 +1928,7 @@ fun SettingsScreen(
                     )
                 }
                 NoopButton(
-                    text = "Remove image",
+                    text = uiString(R.string.l10n_settings_screen_remove_image),
                     kind = NoopButtonKind.Tertiary,
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {

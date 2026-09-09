@@ -520,7 +520,7 @@
     <string name="l10n_health_screen_no_strap_connected_fb37b99e">Kein Strap verbunden</string>
     <string name="l10n_health_screen_not_enough_history_in_this_range_2da72f80">Nicht genug Geschichte in diesem Bereich</string>
     <string name="l10n_health_screen_not_enough_history_yet_0e2f93b6">Noch nicht genug Geschichte</string>
-    <string name="l10n_health_screen_one_reading_so_far_your_trend_eaad57f2">Eine Lektüre bisher - dein Trendchart füllt sich hier einmal pro Sekunde aus</string>
+    <string name="l10n_health_screen_one_reading_so_far_your_trend_eaad57f2">Ein Wert bisher - dein Trendchart füllt sich hier einmal pro Sekunde aus, bis eine Messung eintrifft.</string>
     <string name="l10n_health_screen_out_of_100_da0953a8">von 100</string>
     <string name="l10n_health_screen_respiratory_1cd8c175">Atmung</string>
     <string name="l10n_health_screen_resting_hr_26677094">Ruhe-HF</string>
@@ -2759,4 +2759,10 @@
     <string name="l10n_today_screen_see_the_charge_trend_9dcbcff7">Ladungs-Trend ansehen</string>
     <string name="l10n_today_screen_every_day_s_score_over_time_a00ea7c7">Jeder Tageswert im Zeitverlauf.</string>
     <string name="l10n_app_changelog_a_coach_that_keeps_the_thread_2ee52e0c">Ein Coach, der den Faden behält, deine Herzfrequenz auf dem Homescreen und Diagramme, die weniger behaupten</string>
+    <string name="l10n_data_sources_screen_not_yet">noch nicht</string>
+    <string name="l10n_test_centre_screen_share_captured_log">Erfasstes Protokoll teilen</string>
+    <string name="l10n_trends_screen_share_recap">Zusammenfassung teilen</string>
+    <string name="l10n_settings_screen_browse_files">Dateien durchsuchen</string>
+    <string name="l10n_settings_screen_remove_image">Bild entfernen</string>
+    <string name="l10n_sleep_screen_raw_on_device_stages">Rohe On-Device-Phasen</string>
 </resources>

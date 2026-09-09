@@ -477,7 +477,7 @@
     <string name="l10n_health_screen_no_strap_connected_fb37b99e">Brak podłączonego paska</string>
     <string name="l10n_health_screen_not_enough_history_in_this_range_2da72f80">Za mało historii w tym zakresie</string>
     <string name="l10n_health_screen_not_enough_history_yet_0e2f93b6">Jeszcze za mało historii</string>
-    <string name="l10n_health_screen_one_reading_so_far_your_trend_eaad57f2">Jak dotąd jeden odczyt — wykres trendu wypełnia się tutaj raz na sekundę</string>
+    <string name="l10n_health_screen_one_reading_so_far_your_trend_eaad57f2">Jak dotąd jeden odczyt — wykres trendu wypełnia się tutaj raz na sekundę, aż pojawi się odczyt.</string>
     <string name="l10n_health_screen_out_of_100_da0953a8">na 100</string>
     <string name="l10n_health_screen_respiratory_1cd8c175">Oddechowy</string>
     <string name="l10n_health_screen_resting_hr_26677094">Odpoczynkowe tętno</string>
@@ -2750,4 +2750,10 @@
     <string name="l10n_today_screen_see_the_charge_trend_9dcbcff7">Zobacz trend Energii</string>
     <string name="l10n_today_screen_every_day_s_score_over_time_a00ea7c7">Wynik każdego dnia w czasie.</string>
     <string name="l10n_app_changelog_a_coach_that_keeps_the_thread_2ee52e0c">Trener, ktory nie gubi watku, tetno na ekranie glownym i wykresy, ktore mniej zakladaja</string>
+    <string name="l10n_data_sources_screen_not_yet">jeszcze nie</string>
+    <string name="l10n_test_centre_screen_share_captured_log">Udostępnij przechwycony dziennik</string>
+    <string name="l10n_trends_screen_share_recap">Udostępnij podsumowanie</string>
+    <string name="l10n_settings_screen_browse_files">Przeglądaj pliki</string>
+    <string name="l10n_settings_screen_remove_image">Usuń obraz</string>
+    <string name="l10n_sleep_screen_raw_on_device_stages">Surowe fazy na urządzeniu</string>
 </resources>

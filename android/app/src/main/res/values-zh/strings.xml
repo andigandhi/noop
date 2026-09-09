@@ -467,7 +467,7 @@
     <string name="l10n_health_screen_no_strap_connected_fb37b99e">未连接手环</string>
     <string name="l10n_health_screen_not_enough_history_in_this_range_2da72f80">该时间范围内历史数据不足</string>
     <string name="l10n_health_screen_not_enough_history_yet_0e2f93b6">历史数据不足</string>
-    <string name="l10n_health_screen_one_reading_so_far_your_trend_eaad57f2">目前只有一条读数 — 当数据积累到一定程度时，您的趋势图将在此处按秒实时渲染。</string>
+    <string name="l10n_health_screen_one_reading_so_far_your_trend_eaad57f2">目前只有一条读数 — 您的趋势图将在此处按秒实时更新，直到新的读数到达。</string>
     <string name="l10n_health_screen_out_of_100_da0953a8">/ 100</string>
     <string name="l10n_health_screen_respiratory_1cd8c175">呼吸</string>
     <string name="l10n_health_screen_resting_hr_26677094">静息心率</string>
@@ -2659,4 +2659,10 @@
     <string name="l10n_today_screen_see_the_charge_trend_9dcbcff7">查看充能趋势</string>
     <string name="l10n_today_screen_every_day_s_score_over_time_a00ea7c7">每天的分数，随时间变化。</string>
     <string name="l10n_app_changelog_a_coach_that_keeps_the_thread_2ee52e0c">能接住话头的教练、主屏幕上的心率，以及不再过度断言的图表</string>
+    <string name="l10n_data_sources_screen_not_yet">尚未</string>
+    <string name="l10n_test_centre_screen_share_captured_log">分享捕获的日志</string>
+    <string name="l10n_trends_screen_share_recap">分享回顾</string>
+    <string name="l10n_settings_screen_browse_files">浏览文件</string>
+    <string name="l10n_settings_screen_remove_image">移除图片</string>
+    <string name="l10n_sleep_screen_raw_on_device_stages">设备原始阶段</string>
 </resources>

@@ -485,7 +485,7 @@
     <string name="l10n_health_screen_no_strap_connected_fb37b99e">Nenhuma bracelete ligada</string>
     <string name="l10n_health_screen_not_enough_history_in_this_range_2da72f80">Não há histórico suficiente neste intervalo</string>
     <string name="l10n_health_screen_not_enough_history_yet_0e2f93b6">Ainda não há histórico suficiente</string>
-    <string name="l10n_health_screen_one_reading_so_far_your_trend_eaad57f2">Uma leitura até agora – o teu gráfico de tendências é aqui preenchido uma vez por segundo </string>
+    <string name="l10n_health_screen_one_reading_so_far_your_trend_eaad57f2">Uma leitura até agora – o teu gráfico de tendências é aqui preenchido uma vez por segundo até chegar uma leitura.</string>
     <string name="l10n_health_screen_out_of_100_da0953a8">de 100</string>
     <string name="l10n_health_screen_respiratory_1cd8c175">Respiratório</string>
     <string name="l10n_health_screen_resting_hr_26677094">Descansando RH</string>
@@ -2738,4 +2738,10 @@
     <string name="l10n_today_screen_see_the_charge_trend_9dcbcff7">Ver a tendência da Carga</string>
     <string name="l10n_today_screen_every_day_s_score_over_time_a00ea7c7">A pontuação de cada dia, ao longo do tempo.</string>
     <string name="l10n_app_changelog_a_coach_that_keeps_the_thread_2ee52e0c">Um treinador que mantem o fio, a sua frequencia cardiaca no ecra principal e graficos que afirmam menos</string>
+    <string name="l10n_data_sources_screen_not_yet">ainda não</string>
+    <string name="l10n_test_centre_screen_share_captured_log">Partilhar registo capturado</string>
+    <string name="l10n_trends_screen_share_recap">Partilhar resumo</string>
+    <string name="l10n_settings_screen_browse_files">Procurar ficheiros</string>
+    <string name="l10n_settings_screen_remove_image">Remover imagem</string>
+    <string name="l10n_sleep_screen_raw_on_device_stages">Fases em bruto no dispositivo</string>
 </resources>

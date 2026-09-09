@@ -559,7 +559,7 @@ fun DataSourcesScreen(vm: AppViewModel) {
                         )
                     }
                     Text(
-                        uiString(R.string.l10n_data_sources_screen_last_sync_b793ffab) + if (hcLastSync == 0L) "not yet"
+                        uiString(R.string.l10n_data_sources_screen_last_sync_b793ffab) + if (hcLastSync == 0L) uiString(R.string.l10n_data_sources_screen_not_yet)
                         else DateUtils.getRelativeTimeSpanString(hcLastSync).toString(),
                         style = NoopType.footnote,
                         color = Palette.textTertiary,

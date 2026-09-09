@@ -830,7 +830,7 @@ private fun DiagnosticToolsCard(vm: AppViewModel) {
                 )
             }
             NoopButton(
-                text = "Share captured log",
+                text = uiString(R.string.l10n_test_centre_screen_share_captured_log),
                 leadingIcon = Icons.Filled.Upload,
                 kind = NoopButtonKind.Secondary,
                 fullWidth = true,

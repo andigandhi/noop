@@ -1991,8 +1991,7 @@ fun VitalDetailScreen(vm: AppViewModel, key: String) {
                             color = Palette.textTertiary,
                         )
                         Text(
-                            text = uiString(R.string.l10n_health_screen_one_reading_so_far_your_trend_eaad57f2) +
-                                "reading lands.",
+                            text = uiString(R.string.l10n_health_screen_one_reading_so_far_your_trend_eaad57f2),
                             style = NoopType.subhead,
                             color = Palette.textSecondary,
                         )

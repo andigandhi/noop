@@ -550,7 +550,7 @@
     <string name="l10n_health_screen_no_strap_connected_fb37b99e">Браслет не подключён</string>
     <string name="l10n_health_screen_not_enough_history_in_this_range_2da72f80">Недостаточно истории в этом диапазоне</string>
     <string name="l10n_health_screen_not_enough_history_yet_0e2f93b6">Пока недостаточно истории</string>
-    <string name="l10n_health_screen_one_reading_so_far_your_trend_eaad57f2">Пока одно измерение — график тренда появится здесь, как только будет второе </string>
+    <string name="l10n_health_screen_one_reading_so_far_your_trend_eaad57f2">Пока одно измерение — график тренда появится здесь, как только будет второе измерение.</string>
     <string name="l10n_health_screen_out_of_100_da0953a8">из 100</string>
     <string name="l10n_health_screen_respiratory_1cd8c175">Дыхание</string>
     <string name="l10n_health_screen_resting_hr_26677094">Пульс в покое</string>
@@ -2629,4 +2629,10 @@
     <string name="l10n_today_screen_see_the_charge_trend_9dcbcff7">Посмотреть динамику Заряда</string>
     <string name="l10n_today_screen_every_day_s_score_over_time_a00ea7c7">Оценка за каждый день во времени.</string>
     <string name="l10n_app_changelog_a_coach_that_keeps_the_thread_2ee52e0c">Тренер, который не теряет нить, ваш пульс на главном экране и графики, которые меньше домысливают</string>
+    <string name="l10n_data_sources_screen_not_yet">ещё нет</string>
+    <string name="l10n_test_centre_screen_share_captured_log">Поделиться захваченным журналом</string>
+    <string name="l10n_trends_screen_share_recap">Поделиться итогами</string>
+    <string name="l10n_settings_screen_browse_files">Обзор файлов</string>
+    <string name="l10n_settings_screen_remove_image">Удалить изображение</string>
+    <string name="l10n_sleep_screen_raw_on_device_stages">Сырые этапы на устройстве</string>
 </resources>
