@@ -315,7 +315,7 @@ private fun SyncStatusSection(vm: AppViewModel, onSyncNow: () -> Unit) {
                         // sync", not pulsing, directly above a DISABLED Sync now — on exactly the strap
                         // that cannot sync. Before the button was gated the two agreed (both wrong);
                         // gating one without the other is what made them contradict.
-                        title = if (live.historyReady) "Ready to sync" else "Pairing…",
+                        title = if (live.historyReady) uiString(R.string.l10n_health_screen_ready_to_sync) else uiString(R.string.l10n_health_screen_pairing),
                         tone = StrandTone.Accent,
                         showsDot = true,
                         pulsing = !live.historyReady,
@@ -328,19 +328,18 @@ private fun SyncStatusSection(vm: AppViewModel, onSyncNow: () -> Unit) {
                 // connected+bonded and not already syncing; the gated BLE entry point is a safe no-op
                 // otherwise. (Total pending records are unknowable from the protocol, so no progress %.)
                 NoopButton(
-                    text = if (live.backfilling) "Syncing…" else "Sync now",
+                    text = if (live.backfilling) uiString(R.string.l10n_health_screen_syncing) else uiString(R.string.l10n_health_screen_sync_now),
                     leadingIcon = Icons.Filled.Sync,
                     kind = NoopButtonKind.Secondary,
                     fullWidth = true,
                     enabled = canSync,
                     modifier = Modifier.semantics {
                         contentDescription = if (canSync) {
-                            "Sync now. Pulls your strap's stored history immediately, without waiting " +
-                                "for the next automatic sync."
+                            uiString(R.string.l10n_health_screen_sync_now_description_pulls)
                         } else if (live.backfilling) {
-                            "Sync now. A sync is already in progress."
+                            uiString(R.string.l10n_health_screen_sync_now_description_in_progress)
                         } else {
-                            "Sync now. Connect your strap first."
+                            uiString(R.string.l10n_health_screen_sync_now_description_connect)
                         }
                     },
                     onClick = onSyncNow,
@@ -556,7 +555,7 @@ private fun HealthContributorsSection(day: DailyMetric?) {
                 SectionHeader("Contributors", overline = "Recovery")
             }
             StatePill(
-                title = if (solid) "SOLID" else "CALIBRATING",
+                title = if (solid) uiString(R.string.l10n_health_screen_solid) else uiString(R.string.l10n_health_screen_calibrating),
                 tone = if (solid) StrandTone.Accent else StrandTone.Neutral,
             )
         }
@@ -856,8 +855,8 @@ private fun VitalityHero(
                         color = Palette.textPrimary,
                     )
                     Text(
-                        if (delta == 0) "about your age"
-                        else "${kotlin.math.abs(delta)} ${yearWord(delta)} ${if (younger) "younger" else "older"}",
+                        if (delta == 0) uiString(R.string.l10n_health_screen_about_your_age)
+                        else uiString(R.string.l10n_health_screen_younger_older, kotlin.math.abs(delta), yearWord(delta), if (younger) "younger" else "older"),
                         style = NoopType.footnote,
                         color = if (delta == 0) Palette.textSecondary
                         else if (younger) Palette.statusPositive else Palette.statusWarning,
@@ -1327,16 +1326,16 @@ private fun HeartRateSection(vm: AppViewModel, hrMax: Int) {
                         Text(uiString(R.string.l10n_health_screen_heart_rate_dde6e8f7), style = NoopType.headline, color = Palette.textPrimary)
                         Text(
                             text = when {
-                                derived -> "Estimated from R-R interval"
-                                hasLiveHr -> "Streaming live"
-                                else -> "Awaiting strap"
+                                derived -> uiString(R.string.l10n_health_screen_estimated_from_rr)
+                                hasLiveHr -> uiString(R.string.l10n_health_screen_streaming_live)
+                                else -> uiString(R.string.l10n_health_screen_awaiting_strap)
                             },
                             style = NoopType.footnote,
                             color = Palette.textSecondary,
                         )
                     }
                     Text(
-                        text = if (hasLiveHr) "$displayHr bpm" else "—",
+                        text = if (hasLiveHr) uiString(R.string.l10n_health_screen_hr_bpm, displayHr) else "—",
                         style = NoopType.metricInline,
                         color = if (hasLiveHr) zoneColor else Palette.textTertiary,
                     )
@@ -1350,9 +1349,9 @@ private fun HeartRateSection(vm: AppViewModel, hrMax: Int) {
                         .height(Metrics.chartHeight)
                         .semantics {
                             contentDescription = if (hasLiveHr) {
-                                "Live heart rate over time, $displayHr beats per minute, zone $zone"
+                                uiString(R.string.l10n_health_screen_live_hr_over_time_with_data, displayHr, zone)
                             } else {
-                                "Live heart rate over time, no data"
+                                uiString(R.string.l10n_health_screen_live_hr_over_time_no_data)
                             }
                         },
                 ) {
@@ -1925,7 +1924,7 @@ fun VitalDetailScreen(vm: AppViewModel, key: String) {
     val showDayCycleBackground = remember { NoopPrefs.showDayCycleBackground(context) }
     val skyBehindCards = remember { NoopPrefs.skyBehindCards(context) }
     ScreenScaffold(
-        title = detail?.title ?: "Vital Signs",
+        title = detail?.title ?: uiString(R.string.l10n_health_screen_vital_signs),
         subtitle = when {
             key == "fitness_age" && loadedPoints == 0 -> "What your Fitness Age still needs."
             loadedPoints == 1 -> "Your latest reading — trend to follow."
@@ -2191,7 +2190,7 @@ fun VitalDetailScreen(vm: AppViewModel, key: String) {
                         Column(modifier = Modifier.weight(1f)) {
                             Overline(label, color = Palette.textTertiary)
                             Text(
-                                text = metric?.let { "${detail.format(it)} ${detail.unit}".trim() } ?: "—",
+                                text = metric?.let { uiString(R.string.l10n_health_screen_metric_value_unit, detail.format(it), detail.unit).trim() } ?: "—",
                                 style = NoopType.bodyNumber,
                                 color = Palette.textPrimary,
                             )

@@ -567,7 +567,7 @@ fun BreatheScreen(viewModel: AppViewModel) {
                     }
                     when {
                         bpmSelected > 0 -> Text(
-                            String.format(Locale.US, "%.1f br/min", bpmSelected),
+                            String.format(Locale.US, uiString(R.string.l10n_breathe_screen_format_br_min), bpmSelected),
                             style = NoopType.captionNumber, color = Palette.textSecondary,
                         )
                         guided -> Text(
@@ -677,7 +677,7 @@ fun BreatheScreen(viewModel: AppViewModel) {
                     contentDescription = null,
                     modifier = Modifier.padding(end = 6.dp),
                 )
-                Text(if (running) "Stop session" else "Start session", style = NoopType.headline)
+                Text(if (running) uiString(R.string.l10n_breathe_screen_stop_session) else uiString(R.string.l10n_breathe_screen_start_session), style = NoopType.headline)
             }
 
             OutlinedButton(
@@ -1151,7 +1151,7 @@ private fun ResonanceMode(
             NoopCard(tint = Palette.restColor) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                        Text(sweepLabel ?: "Sweeping…", style = NoopType.headline, color = Palette.textPrimary)
+                        Text(sweepLabel ?: uiString(R.string.l10n_breathe_screen_sweeping), style = NoopType.headline, color = Palette.textPrimary)
                         Spacer(Modifier.weight(1f))
                         StatePill("Live", tone = StrandTone.Accent, pulsing = true)
                     }

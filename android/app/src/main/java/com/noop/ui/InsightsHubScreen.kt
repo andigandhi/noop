@@ -385,7 +385,7 @@ private fun DamageForecast(
             StatTile(
                 modifier = Modifier.weight(1f),
                 label = uiString(R.string.l10n_insights_hub_screen_tomorrow_s_card_outcomename_ad70b7f9, card.outcomeName),
-                value = projected?.let { "${it.roundToInt()}${card.outcomeSuffix}" } ?: "—",
+                value = projected?.let { "${it.roundToInt()}${card.outcomeSuffix}" } ?: uiString(R.string.l10n_compare_screen_dash),
                 caption = if (projected != null) "projected · $stepLabel" else "needs a recent day",
                 accent = domain.color,
             )

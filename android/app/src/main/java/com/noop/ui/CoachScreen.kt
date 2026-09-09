@@ -134,11 +134,9 @@ private fun CoachSetup(vm: CoachViewModel) {
             }
             Text(
                 if (isCustom)
-                    "Point the coach at any OpenAI-compatible server: a local model (Ollama, LM " +
-                        "Studio, llama.cpp) keeps everything on your device; an API key is optional."
+                    uiString(R.string.l10n_coach_screen_server_description)
                 else
-                    "Bring your own API key. It is stored encrypted on this device and only used to " +
-                        "send your question plus a short summary of your metrics to the provider you pick.",
+                    uiString(R.string.l10n_coach_screen_api_key_description),
                 style = NoopType.subhead, color = Palette.textSecondary,
             )
 
@@ -213,8 +211,8 @@ private fun CoachSetup(vm: CoachViewModel) {
                 CoachKeyField(
                     value = keyInput,
                     onValueChange = { keyInput = it },
-                    placeholder = if (isCustom) "Only if your server requires one"
-                                  else "Paste your ${provider.displayName} key",
+                    placeholder = if (isCustom) uiString(R.string.l10n_coach_screen_only_if_required)
+                                  else uiString(R.string.l10n_coach_screen_paste_key, provider.displayName),
                 )
             }
 
@@ -347,8 +345,8 @@ private fun CoachChat(vm: CoachViewModel) {
                 Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text(uiString(R.string.l10n_coach_screen_let_the_coach_use_my_data_405d1188), style = NoopType.subhead, color = Palette.textPrimary)
                     Text(
-                        if (consent) "On: your recovery, sleep, HRV and workouts are shared with the provider for tailored coaching."
-                        else "Off: the coach answers generally and sends none of your metrics.",
+                        if (consent) uiString(R.string.l10n_coach_screen_on_description)
+                        else uiString(R.string.l10n_coach_screen_off_description),
                         style = NoopType.footnote, color = Palette.textTertiary,
                     )
                 }
@@ -536,15 +534,15 @@ private fun CoachInstructions(vm: CoachViewModel) {
                     .liquidPress(headerInteraction)
                     .clickable(interactionSource = headerInteraction, indication = null) { expanded = !expanded }
                     .semantics {
-                        contentDescription = if (expanded) "Collapse coach instructions" else "Edit coach instructions"
+                        contentDescription = if (expanded) uiString(R.string.l10n_coach_screen_collapse_instructions) else uiString(R.string.l10n_coach_screen_edit_instructions_action)
                     },
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text(uiString(R.string.l10n_coach_screen_coach_instructions_28a07975), style = NoopType.subhead, color = Palette.textPrimary)
                     Text(
-                        if (hasCustom) "Customised. Your edited instructions frame every reply."
-                        else "Edit how the coach thinks and talks. Takes effect on your next message.",
+                        if (hasCustom) uiString(R.string.l10n_coach_screen_customised)
+                        else uiString(R.string.l10n_coach_screen_edit_instructions),
                         style = NoopType.footnote, color = Palette.textTertiary,
                     )
                 }
@@ -897,7 +895,7 @@ private fun RefreshModelsButton(
             )
         }
         Text(
-            if (refreshing) "Fetching…" else "Refresh models",
+            if (refreshing) uiString(R.string.l10n_coach_screen_fetching) else uiString(R.string.l10n_coach_screen_refresh_models),
             style = NoopType.caption,
             color = if (active) Palette.textPrimary else Palette.textTertiary,
         )
@@ -1169,11 +1167,9 @@ private fun PrivacyNote(local: Boolean = false) {
         Icon(Icons.Filled.Lock, contentDescription = null, tint = Palette.textTertiary, modifier = Modifier.size(13.dp))
         Text(
             if (local)
-                "The coach talks only to the server URL you set. Point it at a local model to " +
-                    "keep everything on your device. Nothing is sent until you ask."
+                uiString(R.string.l10n_coach_screen_private_description)
             else
-                "Private by default: only your question and a short metrics summary are sent, " +
-                    "and only after you set a key.",
+                uiString(R.string.l10n_coach_screen_privacy_default),
             style = NoopType.footnote,
             color = Palette.textTertiary,
         )

@@ -301,9 +301,9 @@ private fun StrapAlarmCard(vm: AppViewModel) {
                     // NOT show here (#864 honesty). Byte-identical wording to the Swift SmartAlarmView twin.
                     Text(
                         if (live.bonded)
-                            "Armed on the strap itself with the experimental 5/MG command. A strap-driven wake is still unconfirmed on 5/MG on our side (confirmed only on WHOOP 4.0), so keep a backup alarm for anything you truly can't miss."
+                            uiString(R.string.l10n_smart_alarm_armed_5mg)
                         else
-                            "Connect your strap to arm this; it's set on the strap's own firmware alarm. Confirmed working on WHOOP 4.0; still experimental on 5.0 and MG. Keep a backup alarm for anything you truly can't miss.",
+                            uiString(R.string.l10n_smart_alarm_connect_strap),
                         style = NoopType.footnote, color = Palette.textTertiary,
                     )
                 } else {
@@ -311,9 +311,9 @@ private fun StrapAlarmCard(vm: AppViewModel) {
                         if (live.bonded)
                             // Truth-sync (#535): confirmed buzzing on a real WHOOP 4.0; byte-identical
                             // wording to the Swift SmartAlarmView.
-                            "Armed on the strap itself, so it can buzz at your wake time even if your phone is asleep or NOOP is closed. Sends the exact alarm command the official app sends, confirmed buzzing on a real WHOOP 4.0 (community wire capture + on-device test, #535). Keep a backup alarm for anything you truly can't miss."
+                            uiString(R.string.l10n_smart_alarm_armed_4)
                         else
-                            "Connect your strap to arm this; it's set on the strap's own firmware alarm. Confirmed working on WHOOP 4.0; still experimental on 5.0 and MG. Keep a backup alarm for anything you truly can't miss.",
+                            uiString(R.string.l10n_smart_alarm_connect_strap),
                         style = NoopType.footnote, color = Palette.textTertiary,
                     )
                     // #1706: ask the strap what it actually has stored. The readback was previously only

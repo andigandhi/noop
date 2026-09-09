@@ -1038,8 +1038,8 @@ private fun SleepUndoBanner(undo: SleepUndoState, onUndo: () -> Unit) {
     // and several read the same (no plural forms in the Android catalogue yet).
     val message = when {
         undo.fromEdit -> uiString(R.string.l10n_sleep_screen_sleep_outside_the_new_times_was_6229881e)
-        session.userEdited -> "Sleep deleted."
-        else -> "Sleep deleted. NOOP won't detect sleep between $startText and $endText again."
+        session.userEdited -> uiString(R.string.l10n_sleep_screen_sleep_deleted)
+        else -> uiString(R.string.l10n_sleep_screen_sleep_deleted_no_redetect, startText, endText)
     }
     NoopCard(tint = Palette.restColor) {
         Row(
@@ -1573,9 +1573,7 @@ private fun OuraRawStagesNote() {
     ) {
         SourceBadge(text = uiString(R.string.l10n_sleep_screen_raw_on_device_stages), tint = Palette.restColor)
         Text(
-            "This split is the ring's raw on-device classification read over Bluetooth, not the adjusted " +
-                "stages the Oura app shows. Expect more Awake and less Deep/REM here than in the Oura app " +
-                "for the same night.",
+            uiString(R.string.l10n_sleep_screen_oura_raw_split_help),
             style = NoopType.caption,
             color = Palette.textTertiary,
         )
@@ -1777,7 +1775,7 @@ private fun NapRow(
             IconButton(onClick = { editingStart = true }) {
                 Icon(
                     Icons.Filled.Edit,
-                    contentDescription = if (nap.userEdited) "Edit nap times (edited)" else "Edit nap times",
+                    contentDescription = if (nap.userEdited) uiString(R.string.l10n_sleep_screen_edit_nap_times_edited) else uiString(R.string.l10n_sleep_screen_edit_nap_times),
                     tint = Palette.restColor,
                     modifier = Modifier.size(18.dp),
                 )

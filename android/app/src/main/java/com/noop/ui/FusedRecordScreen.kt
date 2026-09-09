@@ -152,9 +152,9 @@ fun FusedRecordScreen(
 @Composable
 private fun DayBadgeRow(owner: FusionSource?) {
     val text = if (owner != null) {
-        "Today's scores owned by ${owner.displayName}"
+        uiString(R.string.l10n_fused_record_today_owned_by, owner.displayName)
     } else {
-        "Scores still calibrating, no single day-owner yet"
+        uiString(R.string.l10n_fused_record_scores_calibrating)
     }
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -420,7 +420,7 @@ private fun ContributorRow(
             .semantics {
                 contentDescription =
                     uiString(R.string.l10n_fused_record_screen_contrib_source_displayname_fusionformat_value_contrib_d182dd7f, contrib.source.displayName, FusionFormat.value(contrib.value, metricKey)) +
-                    if (isWinner) ", in use" else ""
+                    if (isWinner) uiString(R.string.l10n_fused_record_in_use) else ""
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),

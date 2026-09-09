@@ -645,7 +645,7 @@ private fun AddMetricMenu(
                 modifier = Modifier.size(16.dp),
             )
             Text(
-                if (atMax) "Max 4" else "Add metric",
+                if (atMax) uiString(R.string.l10n_compare_screen_max_4) else uiString(R.string.l10n_compare_screen_add_metric),
                 style = NoopType.subhead,
                 color = tint,
                 maxLines = 1,
@@ -802,12 +802,12 @@ private fun OverlaySection(
         // series colour so the overlaid lines stay distinguishable against the wash.
         NoopCard(tint = Palette.accent) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Overline("Normalized overlay")
+                Overline(uiString(R.string.l10n_compare_screen_normalized_overlay))
                 Text(
                     if (anyWidened) {
-                        "Each line min-max normalized · sparse series widened past ${range.phrase}"
+                        uiString(R.string.l10n_compare_screen_normalized_sparse, range.phrase)
                     } else {
-                        "Each line min-max normalized within ${range.phrase}"
+                        uiString(R.string.l10n_compare_screen_normalized_within, range.phrase)
                     },
                     style = NoopType.footnote,
                     color = Palette.textTertiary,

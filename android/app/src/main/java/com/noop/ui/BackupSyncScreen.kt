@@ -169,8 +169,8 @@ fun BackupSyncScreen() {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(uiString(R.string.l10n_backup_sync_screen_backup_folder_2a33df93), style = NoopType.headline, color = Palette.textPrimary)
                     Text(
-                        treeUri?.let { "Saving to: ${folderLabel(it)}" }
-                            ?: "No folder chosen yet. Pick one your cloud app already syncs, or any local folder.",
+                        treeUri?.let { uiString(R.string.l10n_backup_sync_screen_saving_to, folderLabel(it)) }
+                            ?: uiString(R.string.l10n_backup_sync_screen_no_folder_chosen),
                         style = NoopType.footnote, color = Palette.textTertiary,
                     )
                     Text(
@@ -194,7 +194,7 @@ fun BackupSyncScreen() {
                         )
                     }
                     NoopButton(
-                        text = if (treeUri == null) "Choose folder" else "Change folder",
+                        text = if (treeUri == null) uiString(R.string.l10n_backup_sync_screen_choose_folder) else uiString(R.string.l10n_backup_sync_screen_change_folder),
                         leadingIcon = Icons.Filled.FolderOpen,
                         kind = NoopButtonKind.Secondary,
                         enabled = !busy,
@@ -309,9 +309,9 @@ fun BackupSyncScreen() {
                     }
                     Text(
                         if (lastMs > 0L) {
-                            "Last backup: ${DateUtils.getRelativeTimeSpanString(lastMs)}"
+                            uiString(R.string.l10n_backup_sync_screen_last_backup, DateUtils.getRelativeTimeSpanString(lastMs).toString())
                         } else {
-                            "No backup yet."
+                            uiString(R.string.l10n_backup_sync_screen_no_backup_yet)
                         },
                         style = NoopType.caption, color = Palette.textTertiary,
                     )
@@ -339,7 +339,7 @@ fun BackupSyncScreen() {
                         }
                     }
                     NoopButton(
-                        text = if (busy) "Working…" else "Back up now",
+                        text = if (busy) uiString(R.string.l10n_backup_sync_screen_working) else uiString(R.string.l10n_backup_sync_screen_back_up_now),
                         leadingIcon = Icons.Filled.CloudUpload,
                         fullWidth = true,
                         enabled = treeUri != null && !busy,
