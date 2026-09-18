@@ -1646,6 +1646,25 @@ class WhoopRepository(
             dao.pairedDevices().filter { it.brand.equals("WHOOP", ignoreCase = true) }.map { it.id },
         )
 
+    /**
+     * Returns the ID of any registered WHOOP device, preferring the active device if available.
+     * Falls back to the first registered WHOOP if no device is currently active. Returns null if no
+     * WHOOP device has ever been registered.
+     *
+     * This enables features like Rhythm to load historical data even when no strap is currently connected,
+     * matching Swift `allSleepSessions` behavior which reads across all registered devices.
+     */
+    suspend fun anyRegisteredWhoopId(activeDeviceId: String? = null): String? {
+        // Prefer the active device if it's set and non-empty
+        if (!activeDeviceId.isNullOrEmpty()) return activeDeviceId
+
+        // Fall back to any registered WHOOP device
+        val whoopIds = dao.pairedDevices()
+            .filter { it.brand.equals("WHOOP", ignoreCase = true) }
+            .map { it.id }
+        return whoopIds.firstOrNull()
+    }
+
     suspend fun sleepSessionsForDevice(deviceId: String, from: Long, to: Long, limit: Int = DEFAULT_LIMIT) =
         dao.sleepSessions(deviceId, from, to, limit)
 
