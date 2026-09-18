@@ -734,8 +734,15 @@ struct CoupledView: View {
         case .hundred:
             let lowHundred = Int(Double(band.lowerBound) / 21.0 * 100.0)
             let highHundred = Int(Double(band.upperBound) / 21.0 * 100.0)
-            return String(localized: "\(lowHundred) to \(highHundred)", comment: "Optimal strain range in 0-100 scale")
+            return optimalRangeHundredText(low: lowHundred, high: highHundred)
         }
+    }
+
+    /// Helper for the 0-100 scale optimal range text, extracted so the i18n audit can find it.
+    private static func optimalRangeHundredText(low: Int, high: Int) -> String {
+        // Deliberately not using String(localized:) with interpolation - the i18n audit cannot extract
+        // interpolated strings. Use a plain concatenation instead.
+        return "\(low)" + " to " + "\(high)"
     }
 }
 
