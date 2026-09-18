@@ -139,6 +139,7 @@ fun CoupledScreen(
     // Materialized from the same all-source physiological cycle as Effort, calories, HR, and steps.
     val workoutsToday = todayRow?.exerciseCount ?: 0
     val context = LocalContext.current
+    val effortScale = remember { UnitPrefs.effortScale(context) }
     val hrvEpoch = remember { NoopPrefs.of(context).getLong(Baselines.hrvBaselineEpochKey, 0L).toDouble() }
     // #1458: carry through the SAME helper Today uses, not a local re-derivation. The local copy was
     // `days.lastOrNull { it.recovery != null && it.day < todayKey }`, which has no `todayScored` guard —
@@ -226,6 +227,7 @@ fun CoupledScreen(
             recovery = recovery,
             calories = todayRow?.activeKcalEst,
             workouts = workoutsToday,
+            effortScale = effortScale,
         )
         SleepCard(
             sleepPerformance = sleepPerformance,
@@ -432,7 +434,7 @@ private fun readinessTint(level: ReadinessEngine.Level): Color = when (level) {
 // MARK: 2. STRAIN ROW — the effort gauge + coupled stat stack
 
 @Composable
-private fun StrainCard(dayStrain21: Double?, recovery: Double?, calories: Double?, workouts: Int) {
+private fun StrainCard(dayStrain21: Double?, recovery: Double?, calories: Double?, workouts: Int, effortScale: EffortScale) {
     NoopCard(padding = 20.dp, tint = Palette.effortColor) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -485,7 +487,7 @@ private fun StrainCard(dayStrain21: Double?, recovery: Double?, calories: Double
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
                 HeroStat("Day Strain", dayStrain21?.let { String.format(Locale.US, "%.1f", it) } ?: COUPLED_NO_DATA, Palette.effortColor)
-                OptimalStat("Optimal", recovery)
+                OptimalStat("Optimal", recovery, effortScale)
                 HeroStat("Calories", calories?.let { "${it.roundToInt()} kcal" } ?: COUPLED_NO_DATA, Palette.metricAmber)
                 HeroStat("Workouts", workouts.toString(), Palette.textPrimary)
             }
@@ -505,7 +507,7 @@ private fun StrainCard(dayStrain21: Double?, recovery: Double?, calories: Double
  * A calibrating / unscored day shows the no-data token over an EMPTY tube, never a guessed band.
  */
 @Composable
-private fun OptimalStat(title: String, recovery: Double?) {
+private fun OptimalStat(title: String, recovery: Double?, effortScale: EffortScale = EffortScale.WHOOP) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -522,7 +524,7 @@ private fun OptimalStat(title: String, recovery: Double?) {
         // neither - so that divergence belongs to all four coupled stats, not to this one. Adding a
         // maxLines here alone would truncate where the siblings wrap and where Swift shrinks: different
         // from both.
-        Text(optimalStrainRangeText(recovery), style = NoopType.number(20f), color = Palette.chargeColor)
+        Text(optimalStrainRangeText(recovery, effortScale), style = NoopType.number(20f), color = Palette.chargeColor)
         // animated = false matches the Swift call: the stat stack is a read-out, not an instrument, and a
         // posed tube costs nothing per frame.
         LiquidTube(
@@ -711,8 +713,15 @@ internal fun optimalUpperFraction(recovery: Double?): Double {
     return (band.high.toDouble() / 21.0).coerceIn(0.0, 1.0)
 }
 
-/** The optimal band as display text ("14 to 18" / the no-data token). Byte-identical to the Swift twin. */
-internal fun optimalStrainRangeText(recovery: Double?): String {
+/** The optimal band as display text ("14 to 18" / "67 to 86" / the no-data token). Byte-identical to the Swift twin. */
+internal fun optimalStrainRangeText(recovery: Double?, effortScale: EffortScale = EffortScale.WHOOP): String {
     val band = optimalStrainRange(recovery) ?: return COUPLED_NO_DATA
-    return "${band.low} to ${band.high}"
+    return when (effortScale) {
+        EffortScale.WHOOP -> "${band.low} to ${band.high}"
+        EffortScale.HUNDRED -> {
+            val lowHundred = (band.low / 21.0 * 100).roundToInt()
+            val highHundred = (band.high / 21.0 * 100).roundToInt()
+            "$lowHundred to $highHundred"
+        }
+    }
 }
