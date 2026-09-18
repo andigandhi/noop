@@ -216090,6 +216090,9 @@
         }
       }
     },
+    "%d to %d": { "localizations": {
+      "de": {"stringUnit": {"state": "translated", "value": "%d bis %d"}}, "es": {"stringUnit": {"state": "translated", "value": "%d a %d"}}, "fr": {"stringUnit": {"state": "translated", "value": "%d à %d"}}, "it": {"stringUnit": {"state": "translated", "value": "%d a %d"}}, "pl": {"stringUnit": {"state": "translated", "value": "%d do %d"}}, "pt-PT": {"stringUnit": {"state": "translated", "value": "%d a %d"}}, "ru": {"stringUnit": {"state": "translated", "value": "%d до %d"}}, "zh-Hans": {"stringUnit": {"state": "translated", "value": "%d 到 %d"}}, "zh-Hant": {"stringUnit": {"state": "translated", "value": "%d 到 %d"}}
+    } },
     "On: your charge, rest, HRV and workouts are sent to the provider, each workout with its sport, duration, distance and heart rate." : { "localizations" : {
         "de": {"stringUnit": {"state": "translated", "value": "An: Ladung, Erholung, HRV und Workouts gehen an den Anbieter, jedes Workout mit Sportart, Dauer, Distanz und Herzfrequenz."}},
         "en": {"stringUnit": {"state": "translated", "value": "On: your charge, rest, HRV and workouts are sent to the provider, each workout with its sport, duration, distance and heart rate."}},
