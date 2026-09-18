@@ -33,6 +33,11 @@ struct CoupledView: View {
     @AppStorage(CardAppearancePrefs.opacityKey) private var cardOpacityPercent = CardAppearancePrefs.defaultPercent
     private var cardOpacity: Double { max(0, min(1, Double(cardOpacityPercent) / 100)) }
 
+    /// Effort display scale (#268): 0–100 (NOOP) vs 0–21 (WHOOP). Display-only; the stored value never
+    /// changes. Mirrors the Android toggle. The optimal range text respects this setting.
+    @AppStorage(UnitPrefs.effortScaleKey) private var effortScaleRaw = EffortScale.hundred.rawValue
+    private var effortScale: EffortScale { EffortScale(rawValue: effortScaleRaw) ?? .hundred }
+
     // Effort is stored 0–100; the coupled read is always the 0–21 Day-Strain axis regardless of the user's
     // #268 display toggle, so the gauge reads like the classic coupled home. Display-only conversion.
     private let strainScale: EffortScale = .whoop
@@ -359,7 +364,7 @@ struct CoupledView: View {
             Text("OPTIMAL")
                 .font(StrandFont.overline).tracking(StrandFont.overlineTracking)
                 .foregroundStyle(StrandPalette.textSecondary)
-            Text(Self.optimalStrainRangeText(recovery: recovery))
+            Text(Self.optimalStrainRangeText(recovery: recovery, effortScale: effortScale))
                 .font(StrandFont.number(20))
                 .foregroundStyle(StrandPalette.chargeColor)
                 .lineLimit(1).minimumScaleFactor(0.6)
@@ -720,10 +725,17 @@ struct CoupledView: View {
         }
     }
 
-    /// The optimal band as display text ("14 to 18" / "—"). Byte-identical formatting to Android.
-    static func optimalStrainRangeText(recovery: Double?) -> String {
+    /// The optimal band as display text ("14 to 18" / "67 to 86" / "—"). Byte-identical formatting to Android.
+    static func optimalStrainRangeText(recovery: Double?, effortScale: EffortScale = .whoop) -> String {
         guard let band = optimalStrainRange(recovery: recovery) else { return "—" }
-        return String(localized: "\(band.lowerBound) to \(band.upperBound)")
+        switch effortScale {
+        case .whoop:
+            return String(localized: "\(band.lowerBound) to \(band.upperBound)")
+        case .hundred:
+            let lowHundred = Int(Double(band.lowerBound) / 21.0 * 100.0)
+            let highHundred = Int(Double(band.upperBound) / 21.0 * 100.0)
+            return String(localized: "\(lowHundred) to \(highHundred)")
+        }
     }
 }
 
