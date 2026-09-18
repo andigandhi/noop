@@ -3083,6 +3083,14 @@ private fun ScoreHeroRow(
                     ),
                 ) {
                     Box(contentAlignment = Alignment.Center) {
+                        // Show the optimal strain range as a gray segment in the ring (task #43 parity).
+                        // The range is derived from recovery (Charge) and shows where the current effort
+                        // should ideally fall. The optimalStrainRange returns values on the 0-21 WHOOP axis,
+                        // so we always normalize to 0..1 fraction (independent of the user's selected scale).
+                        val optimalRange = optimalStrainRange(recovery)
+                        val targetFraction = optimalRange?.let {
+                            (it.low.toFloat() / 21f)..(it.high.toFloat() / 21f)
+                        }
                         HeroScoreVessel(
                             fraction = if (effortOutOf > 0) effortVal / effortOutOf else 0.0,
                             value = effortVal,
@@ -3092,6 +3100,7 @@ private fun ScoreHeroRow(
                             format = { if (effortScale == EffortScale.WHOOP) String.format(Locale.getDefault(), "%.1f", it) else it.toInt().toString() },
                             animated = heroVesselsAnimated,
                             onTap = effortRingTap,
+                            targetRange = targetFraction,
                         )
                         if (strain == null) RingNoData(diameter = ring)
                     }
@@ -3317,6 +3326,7 @@ private fun HeroScoreVessel(
     modifier: Modifier = Modifier,
     showsValue: Boolean = true,
     format: (Double) -> String = { it.roundToInt().toString() },
+    targetRange: ClosedFloatingPointRange<Float>? = null,
     // Both of these are VESSEL-only; the ring branch ignores them.
     //
     // Whether the vessel sloshes live. The caller passes its empty-hero cost gate, so a brand-new user's
@@ -3340,6 +3350,7 @@ private fun HeroScoreVessel(
             modifier = modifier,
             showsLabel = showsValue,
             format = format,
+            targetRange = targetRange,
         )
     } else Box(modifier = modifier.size(diameter), contentAlignment = Alignment.Center) {
         LiquidVessel(

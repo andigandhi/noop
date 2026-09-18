@@ -973,6 +973,7 @@ fun GlowRing(
     modifier: Modifier = Modifier,
     showsLabel: Boolean = true,
     format: (Double) -> String = { it.toInt().toString() },
+    targetRange: ClosedFloatingPointRange<Float>? = null,
 ) {
     val target = fraction.coerceIn(0f, 1f)
     val renderStill = rememberPoseStill()
@@ -1042,6 +1043,22 @@ fun GlowRing(
                     // rings the maintainer flagged. Below the threshold we show just the clean full-circle
                     // track — exactly like the iOS GlowRing's empty state.
                     if (animFraction > 0.001f) {
+                        // Target range segment (gray) — shows the optimal zone. Drawn BEHIND the main arc with a wider
+                        // stroke so it peeks out on both sides, creating a subtle target indicator without overlapping
+                        // the current value. Only drawn when targetRange is provided.
+                        if (targetRange != null) {
+                            val startAngle = targetRange.start * 360f - 90f
+                            val sweepAngle = (targetRange.endInclusive - targetRange.start) * 360f
+                            drawArc(
+                                color = Palette.textTertiary.copy(alpha = 0.4f),
+                                startAngle = startAngle,
+                                sweepAngle = sweepAngle,
+                                useCenter = false,
+                                topLeft = tl,
+                                size = arcSize,
+                                style = Stroke(width = stroke * 1.4f, cap = StrokeCap.Round),
+                            )
+                        }
                         // Tight glow — a wider, low-alpha arc under the crisp one (minSdk-safe, no RenderEffect).
                         // Gated on the dark canvas only, mirroring iOS AdditiveBloom hiding on the light field
                         // (on white it just smears the edge); the crisp arc carries the ring on its own there.
