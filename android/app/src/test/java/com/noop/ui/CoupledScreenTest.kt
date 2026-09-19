@@ -16,25 +16,43 @@ import org.junit.Test
 class CoupledScreenTest {
 
     @Test fun optimalRange_greenDay_suggests14to18() {
-        assertEquals("14 to 18", optimalStrainRangeText(90.0))
-        assertEquals("14 to 18", optimalStrainRangeText(67.0)) // lower boundary of green is inclusive
+        assertEquals("14 to 18", optimalStrainRangeText(90.0, EffortScale.WHOOP))
+        assertEquals("14 to 18", optimalStrainRangeText(67.0, EffortScale.WHOOP)) // lower boundary of green is inclusive
     }
 
     @Test fun optimalRange_yellowDay_suggests10to14() {
-        assertEquals("10 to 14", optimalStrainRangeText(66.9))
-        assertEquals("10 to 14", optimalStrainRangeText(50.0))
-        assertEquals("10 to 14", optimalStrainRangeText(34.0)) // lower boundary of yellow is inclusive
+        assertEquals("10 to 14", optimalStrainRangeText(66.9, EffortScale.WHOOP))
+        assertEquals("10 to 14", optimalStrainRangeText(50.0, EffortScale.WHOOP))
+        assertEquals("10 to 14", optimalStrainRangeText(34.0, EffortScale.WHOOP)) // lower boundary of yellow is inclusive
     }
 
     @Test fun optimalRange_redDay_suggests4to10() {
-        assertEquals("4 to 10", optimalStrainRangeText(33.9))
-        assertEquals("4 to 10", optimalStrainRangeText(10.0))
-        assertEquals("4 to 10", optimalStrainRangeText(0.0))
+        assertEquals("4 to 10", optimalStrainRangeText(33.9, EffortScale.WHOOP))
+        assertEquals("4 to 10", optimalStrainRangeText(10.0, EffortScale.WHOOP))
+        assertEquals("4 to 10", optimalStrainRangeText(0.0, EffortScale.WHOOP))
     }
 
     @Test fun optimalRange_noRecovery_isNoData() {
         assertNull(optimalStrainRange(null))
-        assertEquals("No Data", optimalStrainRangeText(null))
+        assertEquals("No Data", optimalStrainRangeText(null, EffortScale.WHOOP))
+        assertEquals("No Data", optimalStrainRangeText(null, EffortScale.HUNDRED))
+    }
+
+    @Test fun optimalRange_hundredScale_greenDay_suggests67to86() {
+        assertEquals("67 to 86", optimalStrainRangeText(90.0, EffortScale.HUNDRED))
+        assertEquals("67 to 86", optimalStrainRangeText(67.0, EffortScale.HUNDRED)) // lower boundary of green is inclusive
+    }
+
+    @Test fun optimalRange_hundredScale_yellowDay_suggests48to67() {
+        assertEquals("48 to 67", optimalStrainRangeText(66.9, EffortScale.HUNDRED))
+        assertEquals("48 to 67", optimalStrainRangeText(50.0, EffortScale.HUNDRED))
+        assertEquals("48 to 67", optimalStrainRangeText(34.0, EffortScale.HUNDRED)) // lower boundary of yellow is inclusive
+    }
+
+    @Test fun optimalRange_hundredScale_redDay_suggests19to48() {
+        assertEquals("19 to 48", optimalStrainRangeText(33.9, EffortScale.HUNDRED))
+        assertEquals("19 to 48", optimalStrainRangeText(10.0, EffortScale.HUNDRED))
+        assertEquals("19 to 48", optimalStrainRangeText(0.0, EffortScale.HUNDRED))
     }
 
     @Test fun optimalRange_bands_matchTheStruct() {

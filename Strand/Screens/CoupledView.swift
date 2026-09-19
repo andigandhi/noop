@@ -726,14 +726,14 @@ struct CoupledView: View {
     }
 
     /// The optimal band as display text ("14 to 18" / "67 to 86" / "—"). Byte-identical formatting to Android.
-    static func optimalStrainRangeText(recovery: Double?, effortScale: EffortScale = .whoop) -> String {
+    static func optimalStrainRangeText(recovery: Double?, effortScale: EffortScale) -> String {
         guard let band = optimalStrainRange(recovery: recovery) else { return "—" }
         switch effortScale {
         case .whoop:
             return String(localized: "\(band.lowerBound) to \(band.upperBound)")
         case .hundred:
-            let lowHundred = Int(Double(band.lowerBound) / 21.0 * 100.0)
-            let highHundred = Int(Double(band.upperBound) / 21.0 * 100.0)
+            let lowHundred = Int((Double(band.lowerBound) / 21.0 * 100.0).rounded())
+            let highHundred = Int((Double(band.upperBound) / 21.0 * 100.0).rounded())
             return String(localized: "\(lowHundred) to \(highHundred)")
         }
     }

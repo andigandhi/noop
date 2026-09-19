@@ -507,7 +507,7 @@ private fun StrainCard(dayStrain21: Double?, recovery: Double?, calories: Double
  * A calibrating / unscored day shows the no-data token over an EMPTY tube, never a guessed band.
  */
 @Composable
-private fun OptimalStat(title: String, recovery: Double?, effortScale: EffortScale = EffortScale.WHOOP) {
+private fun OptimalStat(title: String, recovery: Double?, effortScale: EffortScale) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -714,7 +714,7 @@ internal fun optimalUpperFraction(recovery: Double?): Double {
 }
 
 /** The optimal band as display text ("14 to 18" / "67 to 86" / the no-data token). Byte-identical to the Swift twin. */
-internal fun optimalStrainRangeText(recovery: Double?, effortScale: EffortScale = EffortScale.WHOOP): String {
+internal fun optimalStrainRangeText(recovery: Double?, effortScale: EffortScale): String {
     val band = optimalStrainRange(recovery) ?: return COUPLED_NO_DATA
     return when (effortScale) {
         EffortScale.WHOOP -> "${band.low} to ${band.high}"
