@@ -1,5 +1,5 @@
 import XCTest
-@testable import NOOP
+@testable import Strand
 
 /**
  * Pins the pure display-only helpers behind the Coupled view (task #43) so they stay byte-identical to the
