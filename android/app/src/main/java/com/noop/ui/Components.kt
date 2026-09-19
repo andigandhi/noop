@@ -1038,11 +1038,21 @@ fun GlowRing(
                     val tl = Offset((size.width - d) / 2f + inset, (size.height - d) / 2f + inset)
                     val sweep = animFraction.coerceIn(0f, 1f) * 360f
 
-                    // Target range segment (gray) — shows the optimal zone. Drawn BEFORE the value arc so it's
-                    // always visible, even when effort is 0 (the guidance is most useful in the morning).
-                    // Uses a narrower stroke (1.2x) than the glow (1.5x) so it sits cleanly inside the track
-                    // without being covered. Only drawn when targetRange is provided.
+                    // Target range segment (gray) — the optimal zone. Drawn BEFORE the value arc so it's
+                    // visible even when effort is 0 (most useful in the morning). Sits on its own inset
+                    // track inside the value ring, so the glow/value arc never overlaps it.
                     if (targetRange != null) {
+                        // Inset the target arc so it sits on its own track inside the value ring, just inside
+                        // the track. The track spans radius ± 0.5 stroke; the target spans its own radius ± 0.3 stroke.
+                        // Insetting by 1.05 stroke places the target's outer edge just inside the track's inner edge,
+                        // accounting for the round caps.
+                        val targetInset = stroke * 1.05f
+                        val targetD = d - stroke - targetInset * 2f
+                        val targetArcSize = Size(targetD, targetD)
+                        val targetTl = Offset(
+                            tl.x + (arcSize.width - targetD) / 2f,
+                            tl.y + (arcSize.height - targetD) / 2f,
+                        )
                         val startAngle = targetRange.start * 360f - 90f
                         val sweepAngle = (targetRange.endInclusive - targetRange.start) * 360f
                         drawArc(
@@ -1050,9 +1060,9 @@ fun GlowRing(
                             startAngle = startAngle,
                             sweepAngle = sweepAngle,
                             useCenter = false,
-                            topLeft = tl,
-                            size = arcSize,
-                            style = Stroke(width = stroke * 1.2f, cap = StrokeCap.Round),
+                            topLeft = targetTl,
+                            size = targetArcSize,
+                            style = Stroke(width = stroke * 0.6f, cap = StrokeCap.Round),
                         )
                     }
 

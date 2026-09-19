@@ -3083,14 +3083,10 @@ private fun ScoreHeroRow(
                     ),
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        // Show the optimal strain range as a gray segment in the ring (task #43 parity).
+                        // Show the optimal strain range as a gray segment in the Effort ring.
                         // The range is derived from recovery (Charge) and shows where the current effort
-                        // should ideally fall. The optimalStrainRange returns values on the 0-21 WHOOP axis,
-                        // so we always normalize to 0..1 fraction (independent of the user's selected scale).
-                        val optimalRange = optimalStrainRange(recovery)
-                        val targetFraction = optimalRange?.let {
-                            (it.low.toFloat() / 21f)..(it.high.toFloat() / 21f)
-                        }
+                        // should ideally fall. Returned as a 0..1 fraction (independent of the user's selected scale).
+                        val targetFraction = optimalFractionRange(recovery)
                         HeroScoreVessel(
                             fraction = if (effortOutOf > 0) effortVal / effortOutOf else 0.0,
                             value = effortVal,
