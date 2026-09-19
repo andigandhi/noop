@@ -1037,28 +1037,31 @@ fun GlowRing(
                     val arcSize = Size(d - stroke, d - stroke)
                     val tl = Offset((size.width - d) / 2f + inset, (size.height - d) / 2f + inset)
                     val sweep = animFraction.coerceIn(0f, 1f) * 360f
+
+                    // Target range segment (gray) — shows the optimal zone. Drawn BEFORE the value arc so it's
+                    // always visible, even when effort is 0 (the guidance is most useful in the morning).
+                    // Uses a narrower stroke (1.2x) than the glow (1.5x) so it sits cleanly inside the track
+                    // without being covered. Only drawn when targetRange is provided.
+                    if (targetRange != null) {
+                        val startAngle = targetRange.start * 360f - 90f
+                        val sweepAngle = (targetRange.endInclusive - targetRange.start) * 360f
+                        drawArc(
+                            color = Palette.textTertiary.copy(alpha = 0.5f),
+                            startAngle = startAngle,
+                            sweepAngle = sweepAngle,
+                            useCenter = false,
+                            topLeft = tl,
+                            size = arcSize,
+                            style = Stroke(width = stroke * 1.2f, cap = StrokeCap.Round),
+                        )
+                    }
+
                     // Only draw the arc (+ its glow) when there's ACTUAL progress. A near-zero round-capped
                     // arc renders as a full visible dot at 12 o'clock on Android's Canvas (unlike iOS's
                     // sub-pixel `trim`), which read as the unwanted "dot" on empty / No-Data / Calibrating
                     // rings the maintainer flagged. Below the threshold we show just the clean full-circle
                     // track — exactly like the iOS GlowRing's empty state.
                     if (animFraction > 0.001f) {
-                        // Target range segment (gray) — shows the optimal zone. Drawn BEHIND the main arc with a wider
-                        // stroke so it peeks out on both sides, creating a subtle target indicator without overlapping
-                        // the current value. Only drawn when targetRange is provided.
-                        if (targetRange != null) {
-                            val startAngle = targetRange.start * 360f - 90f
-                            val sweepAngle = (targetRange.endInclusive - targetRange.start) * 360f
-                            drawArc(
-                                color = Palette.textTertiary.copy(alpha = 0.4f),
-                                startAngle = startAngle,
-                                sweepAngle = sweepAngle,
-                                useCenter = false,
-                                topLeft = tl,
-                                size = arcSize,
-                                style = Stroke(width = stroke * 1.4f, cap = StrokeCap.Round),
-                            )
-                        }
                         // Tight glow — a wider, low-alpha arc under the crisp one (minSdk-safe, no RenderEffect).
                         // Gated on the dark canvas only, mirroring iOS AdditiveBloom hiding on the light field
                         // (on white it just smears the edge); the crisp arc carries the ring on its own there.
