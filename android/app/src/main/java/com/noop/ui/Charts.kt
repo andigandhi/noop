@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -1243,6 +1244,14 @@ fun TimelineChart(
         points.filter { it.ts in windowStart..windowEnd && it.value.isFinite() }
     }
 
+    // #2368: rememberUpdatedState so the gesture handler always reads the LATEST window values
+    // without being recreated. The old code captured windowStart/windowEnd in the closure, but when
+    // onWindowChange triggered a recomposition with new values, the gesture handler still used the
+    // stale captured values, causing the graph to snap back. rememberUpdatedState gives us a stable
+    // reference that always points to the current value.
+    val currentWindowStart by rememberUpdatedState(windowStart)
+    val currentWindowEnd by rememberUpdatedState(windowEnd)
+
     // ONE collapsed semantics node (summary of the VISIBLE window) so the a11y delegate reads a single
     // line instead of walking the canvas; recomputes as the zoom/pan window changes. Changes no drawing.
     val axSummary = seriesSummary(vis.map { it.value }, "Timeline")
@@ -1254,7 +1263,7 @@ fun TimelineChart(
             .pointerInput(bounds) {
                 detectTransformGestures { centroid, pan, zoom, _ ->
                     val width = size.width.toFloat().coerceAtLeast(1f)
-                    var window = windowStart..windowEnd
+                    var window = currentWindowStart..currentWindowEnd
                     // Pinch zooms about the gesture centroid; pan shifts the window.
                     if (zoom != 1f) {
                         val frac = (centroid.x / width).coerceIn(0f, 1f)
