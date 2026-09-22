@@ -65,27 +65,19 @@ private suspend fun loadRhythmData(
         emptyReason: RhythmEmptyState
     ) -> Unit
 ) {
-    // Use any registered WHOOP device, not just the currently active one.
-    // This allows Rhythm to load historical data even when no strap is connected,
-    // matching Swift `allSleepSessions` behavior.
-    val deviceId = viewModel.repo.anyRegisteredWhoopId(viewModel.activeStrapId) ?: run {
-        // No WHOOP device ever registered — stay in GATHERING_DATA state
-        onLoaded(null, emptyList(), RhythmEmptyState.GATHERING_DATA)
-        return
-    }
+    // allSleepSessionsUnion reads across EVERY registered WHOOP regardless of which id is "active",
+    // so passing the (possibly stale, possibly never-connected) active strap id is safe here.
+    val deviceId = viewModel.activeStrapId
     val repo = viewModel.repo
 
-    // Step 1: Load the most recent sleep session (last 14 days)
-    // Use sleepSessionsMerged to search across both imported (raw) and computed ("-noop") sessions,
-    // matching Swift `allSleepSessions` behavior which reads from both namespaces.
-    val now = System.currentTimeMillis() / 1000L
-    val from = now - 14 * 86_400L
+    // Step 1: Load the most recent sleep session (last 14 days), imported UNION computed across every
+    // registered strap, matching Swift `allSleepSessions(days: 14)` exactly.
     val sessions = runCatching {
-        repo.sleepSessionsMerged(deviceId, from, now, limit = 1000)
+        repo.allSleepSessionsUnion(deviceId, days = 14)
     }.getOrDefault(emptyList())
 
-    // Sort by endTs descending to get the most recent session, not just the last in the list
-    val lastSleep = sessions.maxByOrNull { it.endTs } ?: run {
+    // Sessions are sorted by effectiveStartTs ascending, so the last entry is the most recent night.
+    val lastSleep = sessions.lastOrNull() ?: run {
         // No sleep session found — stay in GATHERING_DATA state
         onLoaded(null, emptyList(), RhythmEmptyState.GATHERING_DATA)
         return

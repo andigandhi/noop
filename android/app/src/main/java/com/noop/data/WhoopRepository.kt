@@ -1646,25 +1646,6 @@ class WhoopRepository(
             dao.pairedDevices().filter { it.brand.equals("WHOOP", ignoreCase = true) }.map { it.id },
         )
 
-    /**
-     * Returns the ID of any registered WHOOP device, preferring the active device if available.
-     * Falls back to the first registered WHOOP if no device is currently active. Returns null if no
-     * WHOOP device has ever been registered.
-     *
-     * This enables features like Rhythm to load historical data even when no strap is currently connected,
-     * matching Swift `allSleepSessions` behavior which reads across all registered devices.
-     */
-    suspend fun anyRegisteredWhoopId(activeDeviceId: String? = null): String? {
-        // Prefer the active device if it's set and non-empty
-        if (!activeDeviceId.isNullOrEmpty()) return activeDeviceId
-
-        // Fall back to any registered WHOOP device
-        val whoopIds = dao.pairedDevices()
-            .filter { it.brand.equals("WHOOP", ignoreCase = true) }
-            .map { it.id }
-        return whoopIds.firstOrNull()
-    }
-
     suspend fun sleepSessionsForDevice(deviceId: String, from: Long, to: Long, limit: Int = DEFAULT_LIMIT) =
         dao.sleepSessions(deviceId, from, to, limit)
 
@@ -2064,6 +2045,32 @@ class WhoopRepository(
         List<SleepSession> {
         val ids = rawWhoopSourceIds(deviceId).map { "$it-noop" }
         return dedupSleepBlocks(ids.flatMap { dao.sleepSessions(it, from, to, limit) })
+    }
+
+    /**
+     * ALL sleep sessions across every registered WHOOP (active first, archived included, canonical
+     * last) over the last [days], imported [sleepSessionsUnion] merged with the computed
+     * [computedSleepSessionsUnion] twin: a computed session is kept only when its LOCAL wake-day (the
+     * same `AnalyticsEngine.dayString` keyer `mergeSleep` uses) is NOT already covered by an imported
+     * session that day — no richness exception, unlike `mergeSleepRichness`/[sleepSessionsMerged].
+     * Sorted by [SleepSession.effectiveStartTs] ascending, so the caller's `.lastOrNull()` is the most
+     * recent night. Robust to a stale/wrong [deviceId] (e.g. no strap currently connected) because
+     * [rawWhoopSourceIds] enumerates every registered WHOOP regardless of which id is passed in.
+     * Mirrors Swift `Repository.allSleepSessions(days:)` exactly.
+     */
+    suspend fun allSleepSessionsUnion(deviceId: String, days: Int = 4000): List<SleepSession> {
+        val now = System.currentTimeMillis() / 1000L
+        val lo = now - days * 86_400L
+        val hi = now + 86_400L
+        val imported = sleepSessionsUnion(deviceId, lo, hi)
+        val computed = computedSleepSessionsUnion(deviceId, lo, hi)
+        fun endDay(s: SleepSession): String {
+            val offsetSec = (java.util.TimeZone.getDefault().getOffset(s.endTs * 1000) / 1000).toLong()
+            return com.noop.analytics.AnalyticsEngine.dayString(s.endTs, offsetSec)
+        }
+        val importedDays = imported.mapTo(HashSet(), ::endDay)
+        val computedKept = computed.filter { endDay(it) !in importedDays }
+        return (imported + computedKept).sortedBy { it.effectiveStartTs }
     }
 
     /** Workouts over every registered WHOOP (active first, archived retained) plus canonical "my-whoop",
