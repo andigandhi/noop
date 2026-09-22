@@ -308,6 +308,8 @@ private fun HeroCard(
     // The whole hero is the breakdown's tap target, mirroring Today's Charge-vessel tap (A1). The SAME
     // interactionSource drives the clickable + the liquidPress so the card settles inward on press.
     val interaction = remember { MutableInteractionSource() }
+    val context = LocalContext.current
+    val ringGauges = remember { NoopPrefs.ringGauges(context) }
     // The liquid hero CARD: a translucent near-black that floats over the day-of-sky so the vessel + white
     // count-up number stay crisp — the card does the contrast work, not a muted sky. A rounded 26 corner + a
     // faint white hairline give it the frosted-glass edge of the iOS liquid heroCard. Mirrors the pilot.
@@ -333,21 +335,33 @@ private fun HeroCard(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Box(modifier = Modifier.size(232.dp), contentAlignment = Alignment.Center) {
-                    // The recovery ring becomes a liquid VESSEL filled to the recovery fraction in the sampled
-                    // recovery colour, with the number counting up over it (the Today HeroScoreVessel idiom).
-                    // A carried (not-yet-rescored) morning reads dimmed, the Today #802 idiom. Empty (no score)
-                    // draws an empty vessel and the centre stack shows the "No Data" token instead of a number.
-                    LiquidVessel(
-                        value = ((recovery ?: 0.0) / 100.0).coerceIn(0.0, 1.0),
-                        tint = if (recovery != null) Palette.recoveryColor(recovery) else Palette.chargeColor,
-                        animated = animated,
-                        modifier = Modifier
-                            .size(232.dp)
-                            .alpha(if (isCarrying) 0.8f else 1f),
-                        // Without this the whole 232dp ring, which is most of the card, is a dead zone.
-                        onTap = onTap,
-                    )
-                    HeroCentre(recovery = recovery, readinessLevel = readinessLevel)
+                    // The recovery ring becomes a liquid VESSEL or ring (depending on the Today ring-gauges preference)
+                    // filled to the recovery fraction in the sampled recovery colour, with the number counting up over it
+                    // (the Today HeroScoreVessel idiom). A carried (not-yet-rescored) morning reads dimmed, the Today #802 idiom.
+                    // Empty (no score) draws an empty vessel/ring and the centre stack shows the "No Data" token instead of a number.
+                    if (ringGauges) {
+                        GlowRing(
+                            fraction = ((recovery ?: 0.0) / 100.0).coerceIn(0.0, 1.0).toFloat(),
+                            value = recovery ?: 0.0,
+                            color = if (recovery != null) Palette.recoveryColor(recovery) else Palette.chargeColor,
+                            diameter = 232.dp,
+                            lineWidth = 232.dp * 0.10f,
+                            modifier = Modifier.alpha(if (isCarrying) 0.8f else 1f),
+                        )
+                        HeroCentre(recovery = recovery, readinessLevel = readinessLevel)
+                    } else {
+                        LiquidVessel(
+                            value = ((recovery ?: 0.0) / 100.0).coerceIn(0.0, 1.0),
+                            tint = if (recovery != null) Palette.recoveryColor(recovery) else Palette.chargeColor,
+                            animated = animated,
+                            modifier = Modifier
+                                .size(232.dp)
+                                .alpha(if (isCarrying) 0.8f else 1f),
+                            // Without this the whole 232dp ring, which is most of the card, is a dead zone.
+                            onTap = onTap,
+                        )
+                        HeroCentre(recovery = recovery, readinessLevel = readinessLevel)
+                    }
                 }
                 // The honest state line under the ring: the "Last night · <date>" stamp when carrying a
                 // prior score (#543/#779, the SAME caption Today uses), or the calibrating progress while
@@ -433,13 +447,15 @@ private fun readinessTint(level: ReadinessEngine.Level): Color = when (level) {
 
 @Composable
 private fun StrainCard(dayStrain21: Double?, recovery: Double?, calories: Double?, workouts: Int) {
+    val context = LocalContext.current
+    val ringGauges = remember { NoopPrefs.ringGauges(context) }
     NoopCard(padding = 20.dp, tint = Palette.effortColor) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            // Left: the effort gauge on the 0-21 axis as a liquid VESSEL (the Today HeroScoreVessel idiom),
-            // with the band word as an overline above it (the Swift StrainGauge's LIGHT/MODERATE/STRENUOUS/
+            // Left: the effort gauge on the 0-21 axis as a liquid VESSEL or ring (depending on the Today ring-gauges
+            // preference), with the band word as an overline above it (the Swift StrainGauge's LIGHT/MODERATE/STRENUOUS/
             // HIGH overline). Same fraction (strain / 21) and effort tint as the Today hero effort vessel.
             Column(
                 modifier = Modifier.size(168.dp),
@@ -451,30 +467,51 @@ private fun StrainCard(dayStrain21: Double?, recovery: Double?, calories: Double
                     Text(strainBandWord(dayStrain21 / COUPLED_STRAIN_OUT_OF), style = NoopType.overline, color = Palette.effortColor)
                     Spacer(Modifier.size(4.dp))
                     Box(modifier = Modifier.size(148.dp), contentAlignment = Alignment.Center) {
-                        LiquidVessel(
-                            value = strainFrac,
-                            tint = Palette.effortTint(strainFrac),
-                            animated = true,
-                            modifier = Modifier.size(148.dp),
-                        )
-                        CountUpText(
-                            value = dayStrain21,
-                            format = { String.format(Locale.US, "%.1f", it) },
-                            style = NoopType.number(30f, weight = FontWeight.Bold)
-                                .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-                            color = Color.White,
-                            modifier = Modifier.clearAndSetSemantics {},
-                        )
+                        if (ringGauges) {
+                            GlowRing(
+                                fraction = strainFrac.toFloat(),
+                                value = dayStrain21,
+                                color = Palette.effortTint(strainFrac),
+                                diameter = 148.dp,
+                                lineWidth = 148.dp * 0.10f,
+                                format = { String.format(Locale.US, "%.1f", it) },
+                            )
+                        } else {
+                            LiquidVessel(
+                                value = strainFrac,
+                                tint = Palette.effortTint(strainFrac),
+                                animated = true,
+                                modifier = Modifier.size(148.dp),
+                            )
+                            CountUpText(
+                                value = dayStrain21,
+                                format = { String.format(Locale.US, "%.1f", it) },
+                                style = NoopType.number(30f, weight = FontWeight.Bold)
+                                    .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                                color = Color.White,
+                                modifier = Modifier.clearAndSetSemantics {},
+                            )
+                        }
                     }
                 } else {
-                    // No scored effort yet: an empty (posed) vessel so the card never reads as broken, with
+                    // No scored effort yet: an empty (posed) vessel/ring so the card never reads as broken, with
                     // the honest caption below it, mirroring the empty-hero treatment on Today.
-                    LiquidVessel(
-                        value = 0.0,
-                        tint = Palette.effortColor,
-                        animated = false,
-                        modifier = Modifier.size(148.dp),
-                    )
+                    if (ringGauges) {
+                        GlowRing(
+                            fraction = 0f,
+                            value = 0.0,
+                            color = Palette.effortColor,
+                            diameter = 148.dp,
+                            lineWidth = 148.dp * 0.10f,
+                        )
+                    } else {
+                        LiquidVessel(
+                            value = 0.0,
+                            tint = Palette.effortColor,
+                            animated = false,
+                            modifier = Modifier.size(148.dp),
+                        )
+                    }
                     Text(uiString(R.string.l10n_coupled_screen_no_effort_yet_f622f99d), style = NoopType.footnote, color = Palette.textTertiary, modifier = Modifier.padding(top = 6.dp))
                 }
             }
@@ -559,6 +596,8 @@ private fun SleepCard(
     // liquidPress on the whole tappable card (the SAME interactionSource drives the clickable + the press),
     // so it settles inward on press, mirroring the Today liquid cards.
     val interaction = remember { MutableInteractionSource() }
+    val context = LocalContext.current
+    val ringGauges = remember { NoopPrefs.ringGauges(context) }
     NoopCard(
         padding = 20.dp,
         tint = Palette.restColor,
@@ -576,25 +615,36 @@ private fun SleepCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Box(modifier = Modifier.size(96.dp), contentAlignment = Alignment.Center) {
-                // The sleep-performance ring becomes a liquid VESSEL filled to the performance fraction in the
-                // rest tint, with the number counting up over it (the Today HeroScoreVessel idiom). Empty draws
-                // a posed empty vessel, no number.
-                LiquidVessel(
-                    value = ((sleepPerformance ?: 0.0) / 100.0).coerceIn(0.0, 1.0),
-                    tint = Palette.restColor,
-                    animated = sleepPerformance != null,
-                    modifier = Modifier.size(96.dp),
-                    onTap = onOpenSleep,
-                )
-                if (sleepPerformance != null) {
-                    CountUpText(
-                        value = sleepPerformance,
+                // The sleep-performance ring becomes a liquid VESSEL or ring (depending on the Today ring-gauges preference)
+                // filled to the performance fraction in the rest tint, with the number counting up over it (the Today HeroScoreVessel idiom).
+                // Empty draws a posed empty vessel/ring, no number.
+                if (ringGauges) {
+                    GlowRing(
+                        fraction = ((sleepPerformance ?: 0.0) / 100.0).coerceIn(0.0, 1.0).toFloat(),
+                        value = sleepPerformance ?: 0.0,
+                        color = Palette.restColor,
+                        diameter = 96.dp,
+                        lineWidth = 96.dp * 0.10f,
                         format = { it.roundToInt().toString() },
-                        style = NoopType.number(26f, weight = FontWeight.Bold)
-                            .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-                        color = Color.White,
-                        modifier = Modifier.clearAndSetSemantics {},
                     )
+                } else {
+                    LiquidVessel(
+                        value = ((sleepPerformance ?: 0.0) / 100.0).coerceIn(0.0, 1.0),
+                        tint = Palette.restColor,
+                        animated = sleepPerformance != null,
+                        modifier = Modifier.size(96.dp),
+                        onTap = onOpenSleep,
+                    )
+                    if (sleepPerformance != null) {
+                        CountUpText(
+                            value = sleepPerformance,
+                            format = { it.roundToInt().toString() },
+                            style = NoopType.number(26f, weight = FontWeight.Bold)
+                                .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                            color = Color.White,
+                            modifier = Modifier.clearAndSetSemantics {},
+                        )
+                    }
                 }
             }
 

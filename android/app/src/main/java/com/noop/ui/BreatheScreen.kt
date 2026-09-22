@@ -585,35 +585,49 @@ fun BreatheScreen(viewModel: AppViewModel) {
                     }
                 }
 
-                // The breathe pacer is now a liquid VESSEL: it FILLS on the inhale and EMPTIES on the exhale,
-                // driven by the SAME eased `orbProgress` the orb used (0..1, from the phase-duration tween), so
-                // the breath timing is untouched — the fluid just replaces the scaling orb. Only animates while
-                // a session is live (posed/static otherwise, so the still hero costs nothing). The live BPM
-                // counts up over it (white, tabular, soft shadow, hit-transparent so a tap falls to the vessel,
-                // which owns its own splash+haptic). Rest-tinted (restBright), matching the iOS breathe hero.
+                // The breathe pacer is now a liquid VESSEL or ring (depending on the Today ring-gauges preference):
+                // it FILLS on the inhale and EMPTIES on the exhale, driven by the SAME eased `orbProgress` the orb used
+                // (0..1, from the phase-duration tween), so the breath timing is untouched — the fluid just replaces
+                // the scaling orb. Only animates while a session is live (posed/static otherwise, so the still hero
+                // costs nothing). The live BPM counts up over it (white, tabular, soft shadow, hit-transparent so a
+                // tap falls to the vessel, which owns its own splash+haptic). Rest-tinted (restBright), matching the
+                // iOS breathe hero.
+                val breatheCtx = LocalContext.current
+                val ringGauges = remember { NoopPrefs.ringGauges(breatheCtx) }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(280.dp),
                     contentAlignment = Alignment.Center,
                 ) {
-                    LiquidVessel(
-                        value = orbProgress.toDouble(),
-                        tint = Palette.restBright,
-                        animated = running,
-                        modifier = Modifier.height(280.dp),
-                    )
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.clearAndSetSemantics {},
-                    ) {
-                        Text(
-                            bpm?.toString() ?: "—",
-                            style = NoopType.number(40f, weight = FontWeight.Bold)
-                                .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-                            color = Color.White,
+                    if (ringGauges) {
+                        GlowRing(
+                            fraction = orbProgress.toDouble().coerceIn(0.0, 1.0).toFloat(),
+                            value = bpm?.toDouble() ?: 0.0,
+                            color = Palette.restBright,
+                            diameter = 280.dp,
+                            lineWidth = 280.dp * 0.10f,
+                            format = { bpm?.toString() ?: "—" },
                         )
-                        Text("BPM", style = NoopType.footnote.copy(letterSpacing = 0.8.sp), color = Palette.textTertiary)
+                    } else {
+                        LiquidVessel(
+                            value = orbProgress.toDouble(),
+                            tint = Palette.restBright,
+                            animated = running,
+                            modifier = Modifier.height(280.dp),
+                        )
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.clearAndSetSemantics {},
+                        ) {
+                            Text(
+                                bpm?.toString() ?: "—",
+                                style = NoopType.number(40f, weight = FontWeight.Bold)
+                                    .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                                color = Color.White,
+                            )
+                            Text("BPM", style = NoopType.footnote.copy(letterSpacing = 0.8.sp), color = Palette.textTertiary)
+                        }
                     }
                 }
 

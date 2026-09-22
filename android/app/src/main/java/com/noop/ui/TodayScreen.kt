@@ -3335,7 +3335,7 @@ private fun HeroScoreVessel(
     onTap: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
-    val ringGauges = remember { NoopPrefs.todayRingGauges(context) }
+    val ringGauges = remember { NoopPrefs.ringGauges(context) }
     if (ringGauges) {
         GlowRing(
             fraction = fraction.coerceIn(0.0, 1.0).toFloat(),
@@ -3807,7 +3807,7 @@ private fun HeroVitalRow(
     ) {
         // Ring or vessel per the Today gauge preference; both are static here.
         val gaugeCtx = LocalContext.current
-        if (remember { NoopPrefs.todayRingGauges(gaugeCtx) }) {
+        if (remember { NoopPrefs.ringGauges(gaugeCtx) }) {
             GlowRing(
                 fraction = (fraction ?: 0.0).coerceIn(0.0, 1.0).toFloat(),
                 value = 0.0,
@@ -4539,7 +4539,7 @@ private fun DashboardCardRow(
         // Ring or vessel per the Today gauge preference. Static either way: the many small gauges
         // cost nothing per frame, which is what the vessel's animated=false bought here too.
         val cardGaugeCtx = LocalContext.current
-        if (remember { NoopPrefs.todayRingGauges(cardGaugeCtx) }) {
+        if (remember { NoopPrefs.ringGauges(cardGaugeCtx) }) {
             GlowRing(
                 fraction = (fraction ?: 0.0).coerceIn(0.0, 1.0).toFloat(),
                 value = 0.0,

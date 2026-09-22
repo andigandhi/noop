@@ -1279,6 +1279,8 @@ private fun CorrelationSection(series: List<CompareSeries>, range: CompareRange)
 @Composable
 private fun PairCard(p: PairResult) {
     val tint = correlationColor(p.r)
+    val context = LocalContext.current
+    val ringGauges = remember { NoopPrefs.ringGauges(context) }
     // Frosted card washed by the relationship's own colour (green positive / rose negative), with a
     // TrendChip surfacing the signed direction at a glance — Today's delta idiom, applied to r.
     NoopCard(tint = tint) {
@@ -1300,26 +1302,37 @@ private fun PairCard(p: PairResult) {
                     modifier = Modifier.weight(1f),
                 )
                 TrendChip(text = signedR(p.r), color = tint)
-                // Small liquid vessel accent for the headline single value: |r| fills the vessel in the
+                // Small liquid vessel or ring accent for the headline single value: |r| fills the vessel/ring in the
                 // relationship's own tint, with the signed r rolled up over it (white, tabular, hit-
                 // transparent so a tap falls through). Same r, same tint, same signedR formatting the plain
-                // "r = …" readout used — just visualised as a headline vessel. STATIC (animated = false):
+                // "r = …" readout used — just visualised as a headline vessel/ring. STATIC (animated = false):
                 // up to six of these render in a scrolling list, so they pose once (the pilot's small-gauge
                 // static-raster rule) rather than each running a live clock.
                 Box(modifier = Modifier.size(38.dp), contentAlignment = Alignment.Center) {
-                    LiquidVessel(
-                        value = abs(p.r).coerceIn(0.0, 1.0),
-                        tint = tint,
-                        animated = false,
-                        modifier = Modifier.size(38.dp),
-                    )
-                    CountUpText(
-                        value = p.r,
-                        format = { signedR(it) },
-                        style = NoopType.number(12f, weight = FontWeight.Bold),
-                        color = Color.White,
-                        modifier = Modifier.clearAndSetSemantics {},
-                    )
+                    if (ringGauges) {
+                        GlowRing(
+                            fraction = abs(p.r).coerceIn(0.0, 1.0).toFloat(),
+                            value = p.r,
+                            color = tint,
+                            diameter = 38.dp,
+                            lineWidth = 38.dp * 0.10f,
+                            format = { signedR(it) },
+                        )
+                    } else {
+                        LiquidVessel(
+                            value = abs(p.r).coerceIn(0.0, 1.0),
+                            tint = tint,
+                            animated = false,
+                            modifier = Modifier.size(38.dp),
+                        )
+                        CountUpText(
+                            value = p.r,
+                            format = { signedR(it) },
+                            style = NoopType.number(12f, weight = FontWeight.Bold),
+                            color = Color.White,
+                            modifier = Modifier.clearAndSetSemantics {},
+                        )
+                    }
                 }
             }
 

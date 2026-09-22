@@ -836,9 +836,10 @@ private fun VitalityHero(
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
                 Column(modifier = Modifier.weight(1f)) {
                     Overline("Vitality")
-                    // The Vitality 0–100 rides a filling LiquidVessel on the charge world, the count-up
-                    // number rolled up over it (white, tabular) — the Today HeroScoreVessel idiom. Same
-                    // value + fraction (vitality / 100) as the bare headline this replaced.
+                    // The Vitality 0–100 rides a filling LiquidVessel or GlowRing (depending on the Today
+                    // ring-gauges preference) on the charge world, the count-up number rolled up over it
+                    // (white, tabular) — the Today HeroScoreVessel idiom. Same value + fraction (vitality / 100)
+                    // as the bare headline this replaced.
                     HealthHeroVessel(
                         fraction = vitality / 100.0,
                         value = vitality,
@@ -903,12 +904,13 @@ private fun LiquidHeroCard(content: @Composable () -> Unit) {
 }
 
 /**
- * The health hero gauge: a [LiquidVessel] filled to [fraction] (0..1) in the domain [tint], with a
- * [CountUpText] rolled up over it — white, tabular, a soft shadow, hit-transparent so a tap falls through
- * to the vessel (which owns its own splash+haptic). The Today `HeroScoreVessel` idiom, reused verbatim so
- * the Fitness Age / Vitality numbers ride a filling vessel instead of a bare hand-drawn gauge. The number
- * size tracks the diameter (≈0.27×, capped) so the vessel and numeral stay balanced. Values/fraction/tint
- * are the SAME as the number this replaced — presentation only.
+ * The health hero gauge: a [LiquidVessel] or [GlowRing] depending on the Today ring-gauges preference,
+ * filled to [fraction] (0..1) in the domain [tint], with a [CountUpText] rolled up over it — white,
+ * tabular, a soft shadow, hit-transparent so a tap falls through. For the vessel branch, LiquidVessel
+ * owns its own splash+haptic; the ring branch has no tap handler. The Today `HeroScoreVessel` idiom,
+ * reused verbatim so the Fitness Age / Vitality numbers ride a filling vessel or ring instead of a bare
+ * hand-drawn gauge. The number size tracks the diameter (≈0.27×, capped) so the vessel/ring and numeral
+ * stay balanced. Values/fraction/tint are the SAME as the number this replaced — presentation only.
  */
 @Composable
 private fun HealthHeroVessel(
@@ -920,22 +922,36 @@ private fun HealthHeroVessel(
     animated: Boolean = true,
     format: (Double) -> String = { it.roundToInt().toString() },
 ) {
-    Box(modifier = modifier.size(diameter), contentAlignment = Alignment.Center) {
-        LiquidVessel(
-            value = fraction.coerceIn(0.0, 1.0),
-            tint = tint,
-            animated = animated,
-            modifier = Modifier.size(diameter),
-        )
-        val numberSp = (diameter.value * 0.27f).coerceIn(20f, 30f)
-        CountUpText(
+    val context = LocalContext.current
+    val ringGauges = remember { NoopPrefs.ringGauges(context) }
+    if (ringGauges) {
+        GlowRing(
+            fraction = fraction.coerceIn(0.0, 1.0).toFloat(),
             value = value,
+            color = tint,
+            diameter = diameter,
+            lineWidth = diameter * 0.10f,
+            modifier = modifier,
             format = format,
-            style = NoopType.number(numberSp, weight = FontWeight.Bold)
-                .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-            color = Color.White,
-            modifier = Modifier.clearAndSetSemantics {},
         )
+    } else {
+        Box(modifier = modifier.size(diameter), contentAlignment = Alignment.Center) {
+            LiquidVessel(
+                value = fraction.coerceIn(0.0, 1.0),
+                tint = tint,
+                animated = animated,
+                modifier = Modifier.size(diameter),
+            )
+            val numberSp = (diameter.value * 0.27f).coerceIn(20f, 30f)
+            CountUpText(
+                value = value,
+                format = format,
+                style = NoopType.number(numberSp, weight = FontWeight.Bold)
+                    .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                color = Color.White,
+                modifier = Modifier.clearAndSetSemantics {},
+            )
+        }
     }
 }
 
@@ -1008,9 +1024,10 @@ private fun FitnessAgeHero(
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
                 Column(modifier = Modifier.weight(1f)) {
                     Overline("Fitness Age")
-                    // The hero age rides a filling LiquidVessel on the gold Charge world, the age number
-                    // rolled up over it (white, tabular) — the Today HeroScoreVessel idiom. The shown NUMBER
-                    // is the same value (fitnessAge, rounded) as the bare headline this replaced.
+                    // The hero age rides a filling LiquidVessel or GlowRing (depending on the Today ring-gauges
+                    // preference) on the gold Charge world, the age number rolled up over it (white, tabular) —
+                    // the Today HeroScoreVessel idiom. The shown NUMBER is the same value (fitnessAge, rounded)
+                    // as the bare headline this replaced.
                     HealthHeroVessel(
                         fraction = youthFraction,
                         value = shown.toDouble(),

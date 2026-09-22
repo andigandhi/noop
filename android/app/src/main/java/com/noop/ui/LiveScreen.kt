@@ -1134,6 +1134,8 @@ private fun HeartReadout(
     // The vessel fill: current bpm as a fraction of the age-based max HR (the same hrMax the zone model
     // above uses). Null bpm → empty vessel. Clamped 0..1 by LiquidVessel at the draw call.
     val fraction = bpm?.let { (it.toDouble() / hrMax.toDouble()) } ?: 0.0
+    val context = LocalContext.current
+    val ringGauges = remember { NoopPrefs.ringGauges(context) }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -1147,38 +1149,49 @@ private fun HeartReadout(
                 .aspectRatio(1f),
             contentAlignment = Alignment.Center,
         ) {
-            // The live HR GAUGE as a liquid VESSEL — fills to bpm/hrMax in the zone tint, sloshing live once
-            // a real HR is streaming (animated only when bpm != null, so an idle console poses static and
-            // doesn't churn an empty canvas). Mirrors the liquid Today HeroScoreVessel idiom.
-            LiquidVessel(
-                value = fraction,
-                tint = tint,
-                animated = bpm != null,
-                modifier = Modifier.fillMaxSize(),
-            )
-            // The bpm number rolled up over the vessel — white, tabular, a soft shadow for legibility, and
-            // hit-transparent (clearAndSetSemantics + no clickable) so the tap falls THROUGH to the vessel,
-            // which owns its own tap→splash+haptic. Mirrors HeroScoreVessel's count-up-over-vessel number.
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                if (bpm != null) {
-                    CountUpText(
-                        value = bpm.toDouble(),
-                        format = { it.roundToInt().toString() },
-                        style = NoopType.number(64f, weight = FontWeight.Bold)
-                            .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-                        color = Color.White,
-                        modifier = Modifier.clearAndSetSemantics {},
-                    )
-                } else {
-                    Text(
-                        text = "—",
-                        style = NoopType.number(64f, weight = FontWeight.Bold),
-                        color = Palette.textSecondary,
-                    )
-                }
-                Text("bpm", style = NoopType.subhead, color = Palette.textSecondary)
-                if (zone >= 1) {
-                    Text(uiString(R.string.l10n_live_screen_zone_zone_b8e9c0f9, zone), style = NoopType.overline, color = tint)
+            // The live HR GAUGE as a liquid VESSEL or ring (depending on the Today ring-gauges preference) — fills to
+            // bpm/hrMax in the zone tint, sloshing live once a real HR is streaming (animated only when bpm != null,
+            // so an idle console poses static and doesn't churn an empty canvas). Mirrors the liquid Today HeroScoreVessel idiom.
+            if (ringGauges) {
+                GlowRing(
+                    fraction = fraction.coerceIn(0.0, 1.0).toFloat(),
+                    value = bpm?.toDouble() ?: 0.0,
+                    color = tint,
+                    diameter = 200.dp,
+                    lineWidth = 200.dp * 0.10f,
+                    format = { it.roundToInt().toString() },
+                )
+            } else {
+                LiquidVessel(
+                    value = fraction,
+                    tint = tint,
+                    animated = bpm != null,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                // The bpm number rolled up over the vessel — white, tabular, a soft shadow for legibility, and
+                // hit-transparent (clearAndSetSemantics + no clickable) so the tap falls THROUGH to the vessel,
+                // which owns its own tap→splash+haptic. Mirrors HeroScoreVessel's count-up-over-vessel number.
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    if (bpm != null) {
+                        CountUpText(
+                            value = bpm.toDouble(),
+                            format = { it.roundToInt().toString() },
+                            style = NoopType.number(64f, weight = FontWeight.Bold)
+                                .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                            color = Color.White,
+                            modifier = Modifier.clearAndSetSemantics {},
+                        )
+                    } else {
+                        Text(
+                            text = "—",
+                            style = NoopType.number(64f, weight = FontWeight.Bold),
+                            color = Palette.textSecondary,
+                        )
+                    }
+                    Text("bpm", style = NoopType.subhead, color = Palette.textSecondary)
+                    if (zone >= 1) {
+                        Text(uiString(R.string.l10n_live_screen_zone_zone_b8e9c0f9, zone), style = NoopType.overline, color = tint)
+                    }
                 }
             }
         }

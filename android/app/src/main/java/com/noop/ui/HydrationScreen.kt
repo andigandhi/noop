@@ -189,11 +189,12 @@ fun HydrationScreen(viewModel: AppViewModel) {
         // down (Today / Trends / Sleep / metric-detail parity - same two prefs, same two behaviours).
         fullBleedBackground = screenBackdropFullBleed(showDayCycleBackground, skyBehindCards),
     ) {
-        // HERO — the day's intake as a LiquidVessel (water in a vessel: the literal fit), with the litre
-        // figure counting up over it, floating on the frosted translucent-black liquid hero card so it reads
+        // HERO — the day's intake as a LiquidVessel or GlowRing (depending on the Today ring-gauges preference),
+        // with the litre figure counting up over it, floating on the frosted translucent-black liquid hero card so it reads
         // crisp on the day-of-sky. The daily goal is a LiquidTube beneath. Same fraction math + accent +
         // litre values as the GlowRing this replaced. Mirrors the iOS liquid hero idiom (HeroScoreVessel).
         item {
+            val ringGauges = remember { NoopPrefs.ringGauges(context) }
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -208,39 +209,50 @@ fun HydrationScreen(viewModel: AppViewModel) {
                     verticalArrangement = Arrangement.spacedBy(14.dp),
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        // The vessel fills to the goal fraction in the hydration accent. It runs LIVE (per-frame
+                        // The vessel/ring fills to the goal fraction in the hydration accent. It runs LIVE (per-frame
                         // slosh + tilt) once anything is logged today; a fresh empty day poses it static so the
                         // launch isn't fighting a live canvas. Honours Reduce Motion internally.
-                        LiquidVessel(
-                            value = fraction.toDouble().coerceIn(0.0, 1.0),
-                            tint = accent,
-                            animated = totalMl > 0.0,
-                            modifier = Modifier.size(184.dp),
-                        )
-                        // The litre count-up over the vessel — white, tabular, a soft shadow for legibility,
-                        // hit-transparent (clearAndSetSemantics + no clickable) so a tap falls THROUGH to the
-                        // vessel (LiquidVessel owns its own tap→splash+haptic). Mirrors the iOS HeroScoreCell.
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.clearAndSetSemantics {},
-                        ) {
-                            CountUpText(
+                        if (ringGauges) {
+                            GlowRing(
+                                fraction = fraction.toDouble().coerceIn(0.0, 1.0).toFloat(),
                                 value = totalMl / 1000.0,
+                                color = accent,
+                                diameter = 184.dp,
+                                lineWidth = 184.dp * 0.10f,
                                 format = { String.format(Locale.US, "%.1f", it) },
-                                style = NoopType.number(40f, weight = FontWeight.Bold).copy(
-                                    shadow = Shadow(
-                                        color = Color.Black.copy(alpha = 0.5f),
-                                        offset = Offset(0f, 1f),
-                                        blurRadius = 6f,
+                            )
+                        } else {
+                            LiquidVessel(
+                                value = fraction.toDouble().coerceIn(0.0, 1.0),
+                                tint = accent,
+                                animated = totalMl > 0.0,
+                                modifier = Modifier.size(184.dp),
+                            )
+                            // The litre count-up over the vessel — white, tabular, a soft shadow for legibility,
+                            // hit-transparent (clearAndSetSemantics + no clickable) so a tap falls THROUGH to the
+                            // vessel (LiquidVessel owns its own tap→splash+haptic). Mirrors the iOS HeroScoreCell.
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.clearAndSetSemantics {},
+                            ) {
+                                CountUpText(
+                                    value = totalMl / 1000.0,
+                                    format = { String.format(Locale.US, "%.1f", it) },
+                                    style = NoopType.number(40f, weight = FontWeight.Bold).copy(
+                                        shadow = Shadow(
+                                            color = Color.Black.copy(alpha = 0.5f),
+                                            offset = Offset(0f, 1f),
+                                            blurRadius = 6f,
+                                        ),
                                     ),
-                                ),
-                                color = Color.White,
-                            )
-                            Text(
-                                String.format(Locale.US, "of %.1f L", goalMl / 1000.0),
-                                style = NoopType.subhead,
-                                color = Color.White.copy(alpha = 0.72f),
-                            )
+                                    color = Color.White,
+                                )
+                                Text(
+                                    String.format(Locale.US, "of %.1f L", goalMl / 1000.0),
+                                    style = NoopType.subhead,
+                                    color = Color.White.copy(alpha = 0.72f),
+                                )
+                            }
                         }
                     }
                     // DAILY GOAL — a genuine single-value progress bar, so it reads as a LiquidTube (static:

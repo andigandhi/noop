@@ -691,15 +691,16 @@ private fun sessionSelectionKey(row: WorkoutRow): String = "${row.startTs}|${row
 // are file-scoped to Workouts — the Today equivalents are private to that file.)
 private val LIQUID_HERO_RADIUS: Dp = 26.dp
 
-// MARK: - Effort hero (typical-effort liquid vessel over the day-of-sky)
+// MARK: - Effort hero (typical-effort liquid vessel or ring over the day-of-sky)
 //
-// The liquid restyle of the Effort hero: the typical session Effort as a filling LiquidVessel with the
-// headline number counting up over it (the Today HeroScoreVessel idiom), inside a translucent near-black
-// frosted card that floats over the screen-level liquid sky. The vessel FILL fraction reads the AVERAGE
-// per-session strain on the stored 0–100 Effort axis (scale-independent, so the fill is identical whether
-// the user's display scale is Effort 0–100 or WHOOP 0–21); the count-up NUMBER is shown on the user's
-// scale via UnitFormatter, exactly as the old StrainGauge label was. The scenic backdrop + BevelGauge are
-// gone — the frosted card does the contrast work over the sky, matching the iOS liquid hero.
+// The liquid restyle of the Effort hero: the typical session Effort as a filling LiquidVessel or GlowRing
+// (depending on the Today ring-gauges preference) with the headline number counting up over it (the Today
+// HeroScoreVessel idiom), inside a translucent near-black frosted card that floats over the screen-level
+// liquid sky. The vessel/ring FILL fraction reads the AVERAGE per-session strain on the stored 0–100 Effort
+// axis (scale-independent, so the fill is identical whether the user's display scale is Effort 0–100 or
+// WHOOP 0–21); the count-up NUMBER is shown on the user's scale via UnitFormatter, exactly as the old
+// StrainGauge label was. The scenic backdrop + BevelGauge are gone — the frosted card does the contrast
+// work over the sky, matching the iOS liquid hero.
 
 @Composable
 private fun EffortHero(
@@ -717,6 +718,8 @@ private fun EffortHero(
     val shownEffort = UnitFormatter.effortValue(avgStrain, effortScale)
     val totalTimeH = rows.mapNotNull { it.durationS }.sum() / 3600.0
     val modal = groups.firstOrNull()
+    val context = LocalContext.current
+    val ringGauges = remember { NoopPrefs.ringGauges(context) }
 
     // The liquid hero CARD: a translucent near-black that floats over the day-of-sky so the vessel + white
     // count-up read crisp. Radius 26 + a faint white hairline give the frosted-glass edge of the iOS liquid
@@ -736,26 +739,37 @@ private fun EffortHero(
             ) {
                 Overline("Typical effort", color = Palette.effortColor)
                 Box(modifier = Modifier.size(140.dp), contentAlignment = Alignment.Center) {
-                    LiquidVessel(
-                        value = fraction,
-                        tint = Palette.effortColor,
-                        // Only slosh once a real Effort value is loaded; an empty window poses static + empty.
-                        animated = hasEffort,
-                        modifier = Modifier.size(140.dp),
-                    )
-                    if (hasEffort) {
-                        // Count-up number over the vessel — white, tabular, a soft shadow for legibility,
-                        // hit-transparent so the tap reaches the vessel (splash). Honours the Effort scale.
-                        CountUpText(
-                            // `shownEffort` is already the display-scaled value, so the interpolated `it` is
-                            // in the user's scale — roll it up with the same one-decimal format as before.
+                    if (ringGauges) {
+                        GlowRing(
+                            fraction = fraction.toFloat(),
                             value = shownEffort,
+                            color = Palette.effortColor,
+                            diameter = 140.dp,
+                            lineWidth = 140.dp * 0.10f,
                             format = { oneDecimal(it) },
-                            style = NoopType.number(30f, weight = FontWeight.Bold)
-                                .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-                            color = Color.White,
-                            modifier = Modifier.clearAndSetSemantics {},
                         )
+                    } else {
+                        LiquidVessel(
+                            value = fraction,
+                            tint = Palette.effortColor,
+                            // Only slosh once a real Effort value is loaded; an empty window poses static + empty.
+                            animated = hasEffort,
+                            modifier = Modifier.size(140.dp),
+                        )
+                        if (hasEffort) {
+                            // Count-up number over the vessel — white, tabular, a soft shadow for legibility,
+                            // hit-transparent so the tap reaches the vessel (splash). Honours the Effort scale.
+                            CountUpText(
+                                // `shownEffort` is already the display-scaled value, so the interpolated `it` is
+                                // in the user's scale — roll it up with the same one-decimal format as before.
+                                value = shownEffort,
+                                format = { oneDecimal(it) },
+                                style = NoopType.number(30f, weight = FontWeight.Bold)
+                                    .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                                color = Color.White,
+                                modifier = Modifier.clearAndSetSemantics {},
+                            )
+                        }
                     }
                 }
             }

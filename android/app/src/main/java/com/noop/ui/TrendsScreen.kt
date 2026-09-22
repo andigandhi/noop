@@ -771,30 +771,44 @@ private fun ChartCard(
 }
 
 /**
- * The screen's single liquid accent: a small [LiquidVessel] filled to [value] (0..100 → 0..1) in the
- * charge [tint], the number rolling up over it via [CountUpText] (white, tabular, a soft shadow so it reads
- * on the vessel, hit-transparent so a tap falls through to the vessel's own splash). The Trends echo of the
- * liquid Today `HeroScoreVessel`, sized down to a header readout so it accents the headline value without
- * competing with the crisp chart below.
+ * The screen's single liquid accent: a small [LiquidVessel] or [GlowRing] (depending on the Today ring-gauges
+ * preference) filled to [value] (0..100 → 0..1) in the charge [tint], the number rolling up over it via
+ * [CountUpText] (white, tabular, a soft shadow so it reads on the vessel/ring, hit-transparent). For the
+ * vessel branch, a tap falls through to the vessel's own splash; the ring branch has no tap handler. The
+ * Trends echo of the liquid Today `HeroScoreVessel`, sized down to a header readout so it accents the
+ * headline value without competing with the crisp chart below.
  */
 @Composable
 private fun HeadlineVessel(value: Double, tint: Color) {
     val diameter = 44.dp
-    Box(modifier = Modifier.size(diameter), contentAlignment = Alignment.Center) {
-        LiquidVessel(
-            value = (value / 100.0).coerceIn(0.0, 1.0),
-            tint = tint,
-            animated = true,
-            modifier = Modifier.size(diameter),
-        )
-        CountUpText(
+    val context = LocalContext.current
+    val ringGauges = remember { NoopPrefs.ringGauges(context) }
+    if (ringGauges) {
+        GlowRing(
+            fraction = (value / 100.0).coerceIn(0.0, 1.0).toFloat(),
             value = value,
+            color = tint,
+            diameter = diameter,
+            lineWidth = diameter * 0.10f,
             format = { "${it.roundToInt()}" },
-            style = NoopType.number(17f, weight = FontWeight.Bold)
-                .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-            color = Color.White,
-            modifier = Modifier.clearAndSetSemantics {},
         )
+    } else {
+        Box(modifier = Modifier.size(diameter), contentAlignment = Alignment.Center) {
+            LiquidVessel(
+                value = (value / 100.0).coerceIn(0.0, 1.0),
+                tint = tint,
+                animated = true,
+                modifier = Modifier.size(diameter),
+            )
+            CountUpText(
+                value = value,
+                format = { "${it.roundToInt()}" },
+                style = NoopType.number(17f, weight = FontWeight.Bold)
+                    .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                color = Color.White,
+                modifier = Modifier.clearAndSetSemantics {},
+            )
+        }
     }
 }
 

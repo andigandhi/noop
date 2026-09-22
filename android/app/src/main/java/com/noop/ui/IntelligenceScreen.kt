@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -178,6 +180,8 @@ fun IntelligenceScreen(vm: AppViewModel) {
 private fun ForecastCard(f: RecoveryForecast) {
     val charge = f.charge.roundToInt()
     val band = f.band.roundToInt()
+    val context = LocalContext.current
+    val ringGauges = remember { NoopPrefs.ringGauges(context) }
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
         SectionHeader("Tomorrow's Charge", overline = "Evening forecast", trailing = "Estimate")
         NoopCard(padding = 20.dp) {
@@ -187,13 +191,35 @@ private fun ForecastCard(f: RecoveryForecast) {
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    GlowRing(
-                        fraction = (f.charge / 100.0).coerceIn(0.0, 1.0).toFloat(),
-                        value = f.charge,
-                        color = Palette.recoveryColor(f.charge),
-                        diameter = 168.dp,
-                        lineWidth = 168.dp * 0.10f,
-                    )
+                    if (ringGauges) {
+                        GlowRing(
+                            fraction = (f.charge / 100.0).coerceIn(0.0, 1.0).toFloat(),
+                            value = f.charge,
+                            color = Palette.recoveryColor(f.charge),
+                            diameter = 168.dp,
+                            lineWidth = 168.dp * 0.10f,
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier.size(168.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            LiquidVessel(
+                                value = f.charge / 100.0,
+                                tint = Palette.recoveryColor(f.charge),
+                                animated = false,
+                                modifier = Modifier.size(168.dp),
+                            )
+                            CountUpText(
+                                value = f.charge,
+                                format = { it.roundToInt().toString() },
+                                style = NoopType.number((168 * 0.27f).coerceIn(20f, 30f), weight = androidx.compose.ui.text.font.FontWeight.Bold)
+                                    .copy(shadow = androidx.compose.ui.graphics.Shadow(color = Color.Black.copy(alpha = 0.5f), offset = androidx.compose.ui.geometry.Offset(0f, 1f), blurRadius = 6f)),
+                                color = Color.White,
+                                modifier = Modifier.clearAndSetSemantics {},
+                            )
+                        }
+                    }
                     Text(
                         uiString(R.string.l10n_intelligence_screen_band_ec8a8993, band),
                         style = NoopType.captionNumber,

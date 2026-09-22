@@ -381,20 +381,23 @@ private fun androidx.compose.foundation.lazy.LazyListScope.StressContent(
 // numbers as the Today pilot's hero card.
 private val LIQUID_HERO_RADIUS = 26.dp
 
-// MARK: - 1 · Hero — the liquid stress VESSEL (the flat PipBar is gone)
+// MARK: - 1 · Hero — the liquid stress VESSEL or ring (the flat PipBar is gone)
 //
-// The liquid restyle: the headline 0–3 read is now a band-tinted [LiquidVessel] filling to score/3, with
-// the count-up value rolled up over it in white (the same HeroScoreVessel idiom as the liquid Today). The
-// band word + StatePill + the one plain-English line ride beside / under it. The score, band, tints
-// (StressRamp: calm blue → steady green → tense amber) and the explanation are UNCHANGED — only the
-// presentation moved from the flat PipBar to the sloshing vessel. The card wrapper is the liquid frosted
-// translucent-black hero surface so the vessel + white number stay crisp over the day-of-sky.
+// The liquid restyle: the headline 0–3 read is now a band-tinted [LiquidVessel] or [GlowRing] (depending on
+// the Today ring-gauges preference) filling to score/3, with the count-up value rolled up over it in white
+// (the same HeroScoreVessel idiom as the liquid Today). The band word + StatePill + the one plain-English
+// line ride beside / under it. The score, band, tints (StressRamp: calm blue → steady green → tense amber)
+// and the explanation are UNCHANGED — only the presentation moved from the flat PipBar to the sloshing
+// vessel or crisp ring. The card wrapper is the liquid frosted translucent-black hero surface so the
+// vessel/ring + white number stay crisp over the day-of-sky.
 
 @Composable
 private fun StressHeroCard(model: StressModel, modifier: Modifier = Modifier) {
     val bandColor = StressRamp.color(model.score)
     // The vessel fills on the SAME 0–3 scale the score uses (score / 3 → 0..1), tinted by the live band.
     val fraction = (model.score / 3.0).coerceIn(0.0, 1.0)
+    val context = LocalContext.current
+    val ringGauges = remember { NoopPrefs.ringGauges(context) }
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -415,13 +418,13 @@ private fun StressHeroCard(model: StressModel, modifier: Modifier = Modifier) {
                 StatePill(model.band.title, tone = model.band.tone, showsDot = true)
             }
 
-            // The liquid vessel + the count-up value rolled over it, with "of 3" + the band word beside.
+            // The liquid vessel or ring + the count-up value rolled over it, with "of 3" + the band word beside.
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(18.dp),
             ) {
-                // The band-tinted vessel with a WHITE count-up number over it — the HeroScoreVessel idiom.
+                // The band-tinted vessel/ring with a WHITE count-up number over it — the HeroScoreVessel idiom.
                 // `animated` only once a real score is loaded (model != null here, so always a real value).
                 Box(
                     modifier = Modifier
@@ -435,22 +438,33 @@ private fun StressHeroCard(model: StressModel, modifier: Modifier = Modifier) {
                         },
                     contentAlignment = Alignment.Center,
                 ) {
-                    LiquidVessel(
-                        value = fraction,
-                        tint = bandColor,
-                        animated = true,
-                        modifier = Modifier.size(112.dp),
-                    )
-                    // Count-up value over the vessel — white, tabular, a soft shadow for legibility, and
-                    // hit-transparent so the tap reaches the vessel (splash). Mirrors HeroScoreVessel.
-                    CountUpText(
-                        value = model.score,
-                        format = { String.format(Locale.US, "%.1f", it) },
-                        style = NoopType.number(30f, weight = FontWeight.Bold)
-                            .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-                        color = Color.White,
-                        modifier = Modifier.clearAndSetSemantics {},
-                    )
+                    if (ringGauges) {
+                        GlowRing(
+                            fraction = fraction.toFloat(),
+                            value = model.score,
+                            color = bandColor,
+                            diameter = 112.dp,
+                            lineWidth = 112.dp * 0.10f,
+                            format = { String.format(Locale.US, "%.1f", it) },
+                        )
+                    } else {
+                        LiquidVessel(
+                            value = fraction,
+                            tint = bandColor,
+                            animated = true,
+                            modifier = Modifier.size(112.dp),
+                        )
+                        // Count-up value over the vessel — white, tabular, a soft shadow for legibility, and
+                        // hit-transparent so the tap reaches the vessel (splash). Mirrors HeroScoreVessel.
+                        CountUpText(
+                            value = model.score,
+                            format = { String.format(Locale.US, "%.1f", it) },
+                            style = NoopType.number(30f, weight = FontWeight.Bold)
+                                .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                            color = Color.White,
+                            modifier = Modifier.clearAndSetSemantics {},
+                        )
+                    }
                 }
 
                 Column(

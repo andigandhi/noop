@@ -1235,33 +1235,48 @@ private fun RestHero(score: Double?, asleepMin: Double?, source: String, overlin
 }
 
 /**
- * The sleep-performance score as a liquid VESSEL with the value counting up over it — the liquid Sleep hero
- * element, the Today `HeroScoreVessel` idiom. A [LiquidVessel] fills to [fraction] (0..1) in [tint], sized to
- * [diameter]; over it a [CountUpText] rolls the number up to [value] (white, tabular, a soft shadow so it
- * reads on the vessel). The number is hit-transparent (clearAndSetSemantics + no clickable) so a tap falls
- * THROUGH to the vessel — LiquidVessel owns its own tap→splash+haptic. `animated = true`: a real score is
- * always loaded when this is drawn (the no-score branch shows the hours headline instead).
+ * The sleep-performance score as a liquid VESSEL or ring depending on the Today ring-gauges preference,
+ * with the value counting up over it — the liquid Sleep hero element, the Today `HeroScoreVessel` idiom.
+ * A [LiquidVessel] or [GlowRing] fills to [fraction] (0..1) in [tint], sized to [diameter]; over it a
+ * [CountUpText] rolls the number up to [value] (white, tabular, a soft shadow so it reads on the
+ * vessel/ring). The number is hit-transparent (clearAndSetSemantics + no clickable). For the vessel
+ * branch, a tap falls through to LiquidVessel which owns its own tap→splash+haptic; the ring branch
+ * has no tap handler. `animated = true`: a real score is always loaded when this is drawn (the no-score
+ * branch shows the hours headline instead).
  */
 @Composable
 private fun SleepHeroVessel(fraction: Double, value: Double, tint: Color, diameter: Dp) {
-    Box(modifier = Modifier.size(diameter), contentAlignment = Alignment.Center) {
-        LiquidVessel(
-            value = fraction.coerceIn(0.0, 1.0),
-            tint = tint,
-            animated = true,
-            modifier = Modifier.size(diameter),
-        )
-        // Count-up number over the vessel — white, tabular, a soft shadow for legibility, hit-transparent so
-        // the tap reaches the vessel (splash). Size ≈ diameter × 0.27 (the Today 96→26 ratio), capped.
-        val numberSp = (diameter.value * 0.27f).coerceIn(20f, 52f)
-        CountUpText(
+    val context = LocalContext.current
+    val ringGauges = remember { NoopPrefs.ringGauges(context) }
+    if (ringGauges) {
+        GlowRing(
+            fraction = fraction.coerceIn(0.0, 1.0).toFloat(),
             value = value,
+            color = tint,
+            diameter = diameter,
+            lineWidth = diameter * 0.10f,
             format = { it.roundToInt().toString() },
-            style = NoopType.number(numberSp, weight = FontWeight.Bold)
-                .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
-            color = Color.White,
-            modifier = Modifier.clearAndSetSemantics {},
         )
+    } else {
+        Box(modifier = Modifier.size(diameter), contentAlignment = Alignment.Center) {
+            LiquidVessel(
+                value = fraction.coerceIn(0.0, 1.0),
+                tint = tint,
+                animated = true,
+                modifier = Modifier.size(diameter),
+            )
+            // Count-up number over the vessel — white, tabular, a soft shadow for legibility, hit-transparent so
+            // the tap reaches the vessel (splash). Size ≈ diameter × 0.27 (the Today 96→26 ratio), capped.
+            val numberSp = (diameter.value * 0.27f).coerceIn(20f, 52f)
+            CountUpText(
+                value = value,
+                format = { it.roundToInt().toString() },
+                style = NoopType.number(numberSp, weight = FontWeight.Bold)
+                    .copy(shadow = Shadow(color = Color.Black.copy(alpha = 0.5f), offset = Offset(0f, 1f), blurRadius = 6f)),
+                color = Color.White,
+                modifier = Modifier.clearAndSetSemantics {},
+            )
+        }
     }
 }
 

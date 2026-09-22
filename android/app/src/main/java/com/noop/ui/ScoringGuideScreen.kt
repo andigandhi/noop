@@ -38,6 +38,7 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -374,24 +375,37 @@ private fun ScoreCard(
 }
 
 /**
- * The flat illustrative ring for a score section — a clean [GlowRing] (Design Reset: solid crisp arc,
- * NO bloom) in the section's Reset accent, the same primitive the Today hero rings use, with the score
- * name as a small caption below. Decorative ("what a strong day looks like"), so it carries no semantics.
- * Replaces the old per-section bloom [BevelGauge].
+ * The flat illustrative ring or vessel for a score section — a clean [GlowRing] or [LiquidVessel] (depending
+ * on the Today ring-gauges preference) in the section's Reset accent, the same primitive the Today hero rings
+ * use, with the score name as a small caption below. Decorative ("what a strong day looks like"), so it carries
+ * no semantics. Replaces the old per-section bloom [BevelGauge].
  */
 @Composable
 private fun SampleRing(section: ScoreSection) {
+    val context = LocalContext.current
+    val ringGauges = remember { NoopPrefs.ringGauges(context) }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        GlowRing(
-            fraction = section.sampleFraction.toFloat(),
-            value = section.sampleFraction * 100.0,
-            color = section.accent,
-            diameter = 76.dp,
-            lineWidth = 8.dp,
-        )
+        if (ringGauges) {
+            GlowRing(
+                fraction = section.sampleFraction.toFloat(),
+                value = section.sampleFraction * 100.0,
+                color = section.accent,
+                diameter = 76.dp,
+                lineWidth = 8.dp,
+            )
+        } else {
+            Box(modifier = Modifier.size(76.dp), contentAlignment = Alignment.Center) {
+                LiquidVessel(
+                    value = section.sampleFraction,
+                    tint = section.accent,
+                    animated = false,
+                    modifier = Modifier.size(76.dp),
+                )
+            }
+        }
         Text(
             stringResource(section.labelRes).uppercase(),
             style = NoopType.overline,
