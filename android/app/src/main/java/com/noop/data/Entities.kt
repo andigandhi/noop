@@ -779,10 +779,11 @@ data class LiveSessionRow(
  *
  * INSTRUMENTATION ONLY: nothing reads these rows.
  *
- * CONSUMER STATUS — deliberately none, stated here so nobody has to re-derive it. The writer is live, but
- * every `v18AuxSamples` call site on BOTH platforms is a TEST: no analytic, no score, no gate, no UI, no
- * export reads a row. **Do NOT "clean up" the reader as dead code** — the rows are the point, and the
- * reader is how they become reachable once a consumer is validated. The same applies to the four named
+ * CONSUMER STATUS — only display-only readers of `aux_byte_82`, all behind the default-off SpO₂
+ * strap-estimate toggle (#103): the `spo2_candidate` nightly mean (IntelligenceEngine) and the Sleep tab's
+ * per-window timeline (`ui/SleepSpo2Timeline.kt`). No score, no gate and no export reads a row; every
+ * other slot is still unread. **Do NOT "clean up" the reader as dead code** — the rows are the point, and
+ * the reader is how they become reachable once a consumer is validated. The same applies to the four named
  * columns v31/MIGRATION_24_25 added alongside this table (`gravitySample.dynAccel`,
  * `sleepStateSample.rawByte`, `skinTempSample.aux1Raw/aux2Raw`): they are read into their entities and no
  * consumer touches the properties, on purpose.

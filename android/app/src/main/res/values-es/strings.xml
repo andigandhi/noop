@@ -2820,4 +2820,14 @@
     <string name="data_sources_whoop_live_subtitle">Se empareja directamente con tu pulsera por Bluetooth: sin app de WHOOP, sin nube. La pulsera también puede anunciar su frecuencia cardíaca como un sensor Bluetooth estándar.</string>
     <string name="data_sources_band_broadcast_description">Difunde por Bluetooth la frecuencia cardíaca en vivo de la propia pulsera para Garmin, Zwift o equipos de gimnasio.</string>
     <string name="whoop4_direct_broadcast_explainer">Tu WHOOP 4.0 puede transmitir la frecuencia cardíaca directamente. Abre Fuentes de datos y usa «Transmitir frecuencia cardíaca desde la pulsera» para Zwift, Peloton, Garmin o equipos de gimnasio. También puedes usar «Transmitir FC desde este teléfono» cuando sea necesario.</string>
+    <!-- #103: Sleep tab SpO₂ strap-estimate timeline (one point per measurement window). -->
+    <string name="sleep_spo2_title">Oxígeno en sangre durante la noche</string>
+    <string name="sleep_spo2_night_mean">media %1$d%%</string>
+    <string name="sleep_spo2_point_value">%1$.0f%%</string>
+    <string name="sleep_spo2_footer_windows">Ventanas de medición: %1$d · ventana más baja: %2$d%%</string>
+    <string name="sleep_spo2_footer_disclaimer">Un punto por ventana de medición de la correa (aproximadamente cada 20 minutos). No validado como SpO₂; se descartan los valores fuera de 70–100%. No es una medición médica.</string>
+    <string name="sleep_spo2_chart_description">Estimación de oxígeno en sangre de la correa por ventana de medición durante la noche</string>
+    <string name="sleep_spo2_empty_no_aux">No hay datos de medición de la correa guardados para esta noche. NOOP conserva estos datos sin procesar solo durante los últimos 7 días aproximadamente.</string>
+    <string name="sleep_spo2_empty_no_windows">La correa no informó ninguna ventana de medición de oxígeno en sangre durante esta noche.</string>
+    <string name="sleep_spo2_empty_one_window">Solo hay una ventana de medición esta noche, no es suficiente para una tendencia.</string>
 </resources>

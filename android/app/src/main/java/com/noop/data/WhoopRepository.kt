@@ -1200,8 +1200,8 @@ class WhoopRepository(
     /**
      * The banked 5/MG v18 auxiliary fields in [from, to] for one device, ascending by ts — one row per
      * strap-second, decoded from the compact blob by [V18AuxCodec]. Empty on a WHOOP 4.0 and for any
-     * window offloaded before the table existed. INSTRUMENTATION: nothing in the app calls this; it
-     * exists so the banked bytes are reachable for a census and so the write path has a round-trip test.
+     * window offloaded before the table existed. INSTRUMENTATION: no score reads it; the only consumers
+     * are the display-only SpO₂ strap estimate (#103: nightly mean + Sleep-tab timeline) and the tests.
      * Kotlin twin of the Swift `WhoopStore.v18AuxSamples(deviceId:from:to:)`.
      */
     suspend fun v18AuxSamples(deviceId: String, from: Long, to: Long, limit: Int = DEFAULT_LIMIT):

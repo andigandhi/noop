@@ -81,7 +81,9 @@ import com.noop.analytics.StagePercentages
 import com.noop.data.DismissedSleep
 import com.noop.data.SleepSession
 import com.noop.data.WhoopRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.Instant
 import java.time.ZoneId
@@ -853,6 +855,26 @@ fun SleepScreen(
                 windowOnsetTs = night?.heroOnsetTs,
                 windowWakeTs = night?.heroWakeTs,
             )
+                    // #103: the night's SpO₂ strap estimate as one point per ~20-min measurement window.
+                    // Behind the same default-off toggle as the Blood Oxygen tile's estimate, and WHOOP-only:
+                    // an Oura night's SpO₂ is a different stream with its own transform.
+                    // The read spans the WHOLE bridged night (#345 window), the mean only its fragments.
+                    val spoFrom = night?.heroOnsetTs ?: hrFrom
+                    val spoTo = night?.heroWakeTs ?: hrTo
+                    if (!activeIsOura && NoopPrefs.spo2CandidateDisplay(context) && spoFrom != null && spoTo != null && spoTo > spoFrom) {
+                        val spans = night?.heroGroup.orEmpty().ifEmpty { listOfNotNull(night?.session) }
+                            .map { it.effectiveStartTs..it.endTs }
+                        var spo2Night by remember(spoFrom, spoTo, spans) { mutableStateOf<Spo2Night?>(null) }
+                        LaunchedEffect(spoFrom, spoTo, spans, vm.activeStrapId) {
+                            spo2Night = runCatching {
+                                // One row per strap-second at most, so the window length bounds the read.
+                                val aux = vm.repo.v18AuxSamples(vm.activeStrapId, spoFrom, spoTo, (spoTo - spoFrom + 1).toInt())
+                                withContext(Dispatchers.Default) { SleepSpo2Timeline.resolve(aux, spans) }
+                            }.getOrDefault(Spo2Night(emptyList(), null, 0))
+                        }
+                        Spacer(Modifier.height(Metrics.gap))
+                        SleepSpo2Card(spo2Night)
+                    }
                     }
                     }
                 }

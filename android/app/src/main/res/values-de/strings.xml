@@ -2833,4 +2833,14 @@
     <string name="data_sources_whoop_live_subtitle">Koppelt sich direkt über Bluetooth mit deinem Strap: keine WHOOP-App, keine Cloud. Der Strap kann seine Herzfrequenz außerdem als Standard-Bluetooth-Sensor senden.</string>
     <string name="data_sources_band_broadcast_description">Sendet die eigene Live-Herzfrequenz des Straps über Bluetooth für Garmin, Zwift oder Fitnessgeräte.</string>
     <string name="whoop4_direct_broadcast_explainer">Dein WHOOP 4.0 kann die Herzfrequenz direkt übertragen. Öffne Datenquellen und verwende „Herzfrequenz vom Band übertragen“ für Zwift, Peloton, Garmin oder Fitnessgeräte. Bei Bedarf kannst du alternativ „HF von diesem Telefon übertragen“ verwenden.</string>
+    <!-- #103: Sleep tab SpO₂ strap-estimate timeline (one point per measurement window). -->
+    <string name="sleep_spo2_title">Blutsauerstoff im Verlauf der Nacht</string>
+    <string name="sleep_spo2_night_mean">Ø %1$d%%</string>
+    <string name="sleep_spo2_point_value">%1$.0f%%</string>
+    <string name="sleep_spo2_footer_windows">Messfenster: %1$d · niedrigstes Fenster: %2$d%%</string>
+    <string name="sleep_spo2_footer_disclaimer">Ein Punkt pro Messfenster des Armbands (etwa alle 20 Minuten). Nicht als SpO₂ validiert; Werte außerhalb von 70–100% werden verworfen. Keine medizinische Messung.</string>
+    <string name="sleep_spo2_chart_description">Blutsauerstoff-Schätzung des Armbands pro Messfenster im Verlauf der Nacht</string>
+    <string name="sleep_spo2_empty_no_aux">Für diese Nacht sind keine Messdaten des Armbands gespeichert. NOOP bewahrt diese Rohdaten nur für etwa die letzten 7 Tage auf.</string>
+    <string name="sleep_spo2_empty_no_windows">Das Armband hat in dieser Nacht kein Blutsauerstoff-Messfenster gemeldet.</string>
+    <string name="sleep_spo2_empty_one_window">In dieser Nacht gibt es nur ein Messfenster, zu wenig für einen Verlauf.</string>
 </resources>

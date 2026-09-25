@@ -2819,4 +2819,14 @@
     <string name="data_sources_whoop_live_subtitle">S\'associe directement à votre bracelet par Bluetooth : pas d\'app WHOOP, pas de cloud. Le bracelet peut aussi annoncer sa fréquence cardiaque comme capteur Bluetooth standard.</string>
     <string name="data_sources_band_broadcast_description">Diffuse en Bluetooth la fréquence cardiaque en direct propre au bracelet pour Garmin, Zwift ou les équipements de sport.</string>
     <string name="whoop4_direct_broadcast_explainer">Votre WHOOP 4.0 peut diffuser directement la fréquence cardiaque. Ouvrez Sources de données et utilisez « Diffuser la fréquence cardiaque du bracelet » pour Zwift, Peloton, Garmin ou les équipements de sport. Vous pouvez aussi utiliser « Diffuser la FC depuis ce téléphone » si nécessaire.</string>
+    <!-- #103: Sleep tab SpO₂ strap-estimate timeline (one point per measurement window). -->
+    <string name="sleep_spo2_title">Oxygène sanguin au fil de la nuit</string>
+    <string name="sleep_spo2_night_mean">moy. %1$d%%</string>
+    <string name="sleep_spo2_point_value">%1$.0f%%</string>
+    <string name="sleep_spo2_footer_windows">Fenêtres de mesure : %1$d · fenêtre la plus basse : %2$d%%</string>
+    <string name="sleep_spo2_footer_disclaimer">Un point par fenêtre de mesure du bracelet (environ toutes les 20 minutes). Non validé comme SpO₂ ; les valeurs hors de 70–100% sont écartées. Ce n\'est pas une mesure médicale.</string>
+    <string name="sleep_spo2_chart_description">Estimation de l\'oxygène sanguin par le bracelet, par fenêtre de mesure au fil de la nuit</string>
+    <string name="sleep_spo2_empty_no_aux">Aucune donnée de mesure du bracelet n\'est enregistrée pour cette nuit. NOOP conserve ces données brutes uniquement pour les 7 derniers jours environ.</string>
+    <string name="sleep_spo2_empty_no_windows">Le bracelet n\'a signalé aucune fenêtre de mesure de l\'oxygène sanguin cette nuit.</string>
+    <string name="sleep_spo2_empty_one_window">Une seule fenêtre de mesure cette nuit, pas assez pour une tendance.</string>
 </resources>

@@ -2849,4 +2849,14 @@
     <string name="data_sources_whoop_live_subtitle">Pairs directly with your strap over Bluetooth: no WHOOP app, no cloud. The strap can also advertise its heart rate as a standard Bluetooth sensor.</string>
     <string name="data_sources_band_broadcast_description">Broadcasts the strap\'s own live heart rate over Bluetooth for Garmin, Zwift or gym equipment.</string>
     <string name="whoop4_direct_broadcast_explainer">Your WHOOP 4.0 can broadcast heart rate directly. Open Data Sources and use “Broadcast heart rate from the strap” for Zwift, Peloton, Garmin or gym equipment. You can alternatively use “Broadcast HR from this phone” when needed.</string>
+    <!-- #103: Sleep tab SpO₂ strap-estimate timeline (one point per measurement window). -->
+    <string name="sleep_spo2_title">Blood oxygen through the night</string>
+    <string name="sleep_spo2_night_mean">%1$d%% avg</string>
+    <string name="sleep_spo2_point_value">%1$.0f%%</string>
+    <string name="sleep_spo2_footer_windows">Measurement windows: %1$d · lowest window: %2$d%%</string>
+    <string name="sleep_spo2_footer_disclaimer">One point per strap measurement window (about every 20 minutes). Not validated as SpO₂; values outside 70–100% are discarded. Not a medical measurement.</string>
+    <string name="sleep_spo2_chart_description">Blood oxygen strap estimate per measurement window across the night</string>
+    <string name="sleep_spo2_empty_no_aux">No strap measurement data is stored for this night. NOOP keeps this raw data for about the last 7 days.</string>
+    <string name="sleep_spo2_empty_no_windows">The strap reported no blood oxygen measurement window during this night.</string>
+    <string name="sleep_spo2_empty_one_window">Only one measurement window this night, not enough for a trend.</string>
 </resources>

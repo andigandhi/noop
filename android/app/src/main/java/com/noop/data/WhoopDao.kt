@@ -520,8 +520,8 @@ interface WhoopDao : DeviceRegistryDao {
 
     /**
      * The banked 5/MG v18 auxiliary-field rows in [from, to] (ascending). Empty on a WHOOP 4.0 and for
-     * any window offloaded before the columns existed. INSTRUMENTATION: no analytic calls this — it
-     * exists so the banked bytes are reachable for a census, and so the write path has a round-trip test.
+     * any window offloaded before the columns existed. INSTRUMENTATION: no score reads it; the only
+     * consumers are the display-only SpO₂ strap estimate (#103) and the census/round-trip tests.
      */
     @Query(
         "SELECT * FROM v18AuxSample WHERE deviceId = :deviceId AND ts >= :from AND ts <= :to " +

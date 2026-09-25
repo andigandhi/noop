@@ -2791,4 +2791,14 @@
     <string name="data_sources_whoop_live_subtitle">通过 Bluetooth 直接连接手环：无需 WHOOP 应用，也无需云端。手环还可以将心率作为标准 Bluetooth 传感器进行广播。</string>
     <string name="data_sources_band_broadcast_description">通过 Bluetooth 将手环自身的实时心率广播给 Garmin、Zwift 或健身器材。</string>
     <string name="whoop4_direct_broadcast_explainer">WHOOP 4.0 可以直接广播心率。打开“数据来源”，启用“从手环广播心率”，即可连接 Zwift、Peloton、Garmin 或健身器材。需要时也可以使用“从此手机广播心率”。</string>
+    <!-- #103: Sleep tab SpO₂ strap-estimate timeline (one point per measurement window). -->
+    <string name="sleep_spo2_title">夜间血氧变化</string>
+    <string name="sleep_spo2_night_mean">平均 %1$d%%</string>
+    <string name="sleep_spo2_point_value">%1$.0f%%</string>
+    <string name="sleep_spo2_footer_windows">测量窗口：%1$d · 最低窗口：%2$d%%</string>
+    <string name="sleep_spo2_footer_disclaimer">腕带每个测量窗口一个点（约每 20 分钟一次）。未经验证为 SpO₂；70–100% 以外的数值会被丢弃。非医疗测量。</string>
+    <string name="sleep_spo2_chart_description">夜间各测量窗口的腕带血氧估算</string>
+    <string name="sleep_spo2_empty_no_aux">此夜没有保存腕带测量数据。NOOP 仅保留约最近 7 天的原始数据。</string>
+    <string name="sleep_spo2_empty_no_windows">腕带在此夜未报告任何血氧测量窗口。</string>
+    <string name="sleep_spo2_empty_one_window">此夜只有一个测量窗口，不足以显示趋势。</string>
 </resources>

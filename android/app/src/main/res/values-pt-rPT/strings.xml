@@ -2812,4 +2812,14 @@
     <string name="data_sources_whoop_live_subtitle">Emparelha diretamente com a tua bracelete via Bluetooth: sem aplicação WHOOP, sem cloud. A bracelete também pode anunciar a frequência cardíaca como um sensor Bluetooth padrão.</string>
     <string name="data_sources_band_broadcast_description">Transmite a frequência cardíaca em direto da bracelete por Bluetooth para Garmin, Zwift ou equipamento de ginásio.</string>
     <string name="whoop4_direct_broadcast_explainer">O teu WHOOP 4.0 pode transmitir a frequência cardíaca diretamente. Abre Fontes de dados e utiliza «Transmitir frequência cardíaca da bracelete» para Zwift, Peloton, Garmin ou equipamento de ginásio. Em alternativa, podes utilizar «Transmitir FC deste telemóvel» quando necessário.</string>
+    <!-- #103: Sleep tab SpO₂ strap-estimate timeline (one point per measurement window). -->
+    <string name="sleep_spo2_title">Oxigénio no sangue ao longo da noite</string>
+    <string name="sleep_spo2_night_mean">média %1$d%%</string>
+    <string name="sleep_spo2_point_value">%1$.0f%%</string>
+    <string name="sleep_spo2_footer_windows">Janelas de medição: %1$d · janela mais baixa: %2$d%%</string>
+    <string name="sleep_spo2_footer_disclaimer">Um ponto por janela de medição da pulseira (cerca de 20 em 20 minutos). Não validado como SpO₂; os valores fora de 70–100% são descartados. Não é uma medição médica.</string>
+    <string name="sleep_spo2_chart_description">Estimativa de oxigénio no sangue da pulseira por janela de medição ao longo da noite</string>
+    <string name="sleep_spo2_empty_no_aux">Não há dados de medição da pulseira guardados para esta noite. O NOOP guarda estes dados em bruto apenas durante cerca dos últimos 7 dias.</string>
+    <string name="sleep_spo2_empty_no_windows">A pulseira não comunicou nenhuma janela de medição de oxigénio no sangue durante esta noite.</string>
+    <string name="sleep_spo2_empty_one_window">Apenas uma janela de medição esta noite, insuficiente para uma tendência.</string>
 </resources>

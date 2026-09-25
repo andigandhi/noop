@@ -2713,4 +2713,14 @@
     <string name="data_sources_whoop_live_subtitle">Подключается к браслету напрямую по Bluetooth: без приложения WHOOP и без облака. Браслет также может передавать пульс как стандартный Bluetooth-датчик.</string>
     <string name="data_sources_band_broadcast_description">Передаёт собственный пульс браслета в реальном времени по Bluetooth для Garmin, Zwift или тренажёров.</string>
     <string name="whoop4_direct_broadcast_explainer">WHOOP 4.0 может передавать пульс напрямую. Откройте «Источники данных» и включите «Транслировать пульс с браслета» для Zwift, Peloton, Garmin или тренажёров. При необходимости можно использовать «Передавать пульс с этого телефона».</string>
+    <!-- #103: Sleep tab SpO₂ strap-estimate timeline (one point per measurement window). -->
+    <string name="sleep_spo2_title">Кислород в крови в течение ночи</string>
+    <string name="sleep_spo2_night_mean">ср. %1$d%%</string>
+    <string name="sleep_spo2_point_value">%1$.0f%%</string>
+    <string name="sleep_spo2_footer_windows">Окна измерения: %1$d · самое низкое окно: %2$d%%</string>
+    <string name="sleep_spo2_footer_disclaimer">Одна точка на окно измерения браслета (примерно каждые 20 минут). Не подтверждено как SpO₂; значения вне 70–100% отбрасываются. Не является медицинским измерением.</string>
+    <string name="sleep_spo2_chart_description">Оценка кислорода в крови браслетом по окнам измерения в течение ночи</string>
+    <string name="sleep_spo2_empty_no_aux">Для этой ночи не сохранены данные измерений браслета. NOOP хранит эти необработанные данные только примерно за последние 7 дней.</string>
+    <string name="sleep_spo2_empty_no_windows">Браслет не сообщил ни об одном окне измерения кислорода в крови за эту ночь.</string>
+    <string name="sleep_spo2_empty_one_window">За эту ночь только одно окно измерения — недостаточно для тренда.</string>
 </resources>

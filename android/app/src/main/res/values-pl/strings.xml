@@ -2834,4 +2834,14 @@
     <string name="data_sources_whoop_live_subtitle">Łączy się bezpośrednio z paskiem przez Bluetooth: bez aplikacji WHOOP i bez chmury. Pasek może też nadawać tętno jako standardowy czujnik Bluetooth.</string>
     <string name="data_sources_band_broadcast_description">Transmituje własne tętno paska na żywo przez Bluetooth do Garmin, Zwift lub sprzętu na siłowni.</string>
     <string name="whoop4_direct_broadcast_explainer">WHOOP 4.0 może nadawać tętno bezpośrednio. Otwórz Źródła danych i użyj opcji „Transmituj tętno z opaski” dla Zwift, Peloton, Garmin lub sprzętu na siłowni. W razie potrzeby możesz też użyć opcji „Transmituj tętno z tego telefonu”.</string>
+    <!-- #103: Sleep tab SpO₂ strap-estimate timeline (one point per measurement window). -->
+    <string name="sleep_spo2_title">Natlenienie krwi w ciągu nocy</string>
+    <string name="sleep_spo2_night_mean">śr. %1$d%%</string>
+    <string name="sleep_spo2_point_value">%1$.0f%%</string>
+    <string name="sleep_spo2_footer_windows">Okna pomiarowe: %1$d · najniższe okno: %2$d%%</string>
+    <string name="sleep_spo2_footer_disclaimer">Jeden punkt na okno pomiarowe paska (mniej więcej co 20 minut). Niezweryfikowane jako SpO₂; wartości spoza 70–100% są odrzucane. To nie jest pomiar medyczny.</string>
+    <string name="sleep_spo2_chart_description">Oszacowanie natlenienia krwi przez pasek dla każdego okna pomiarowego w ciągu nocy</string>
+    <string name="sleep_spo2_empty_no_aux">Dla tej nocy nie zapisano danych pomiarowych paska. NOOP przechowuje te surowe dane tylko przez mniej więcej ostatnie 7 dni.</string>
+    <string name="sleep_spo2_empty_no_windows">Pasek nie zgłosił tej nocy żadnego okna pomiaru natlenienia krwi.</string>
+    <string name="sleep_spo2_empty_one_window">Tej nocy jest tylko jedno okno pomiarowe, za mało na trend.</string>
 </resources>
